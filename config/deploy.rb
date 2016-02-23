@@ -1,6 +1,8 @@
 set :application, 'udoczp2h'
 set :repo_url, 'git@github.com:Patrax/udocz_p2h.git'
 
+set :passenger_restart_with_touch, true
+
 set :deploy_to, '/home/deploy/udoczp2h'
 
 set :linked_files, %w{config/database.yml}

@@ -19,7 +19,7 @@ role :db,  %w{159.203.121.237}
 set :stage, :production
 
 # Replace 127.0.0.1 with your server's IP address!
-server '159.203.121.237', user: 'deploy', roles: %w{web app}
+server '159.203.121.237', user: 'deploy', roles: %w{web app db}
 
 # you can set custom ssh options
 # it's possible to pass any option but you need to keep in mind that net/ssh understand limited list of options
