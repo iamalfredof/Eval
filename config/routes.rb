@@ -7,6 +7,22 @@ Rails.application.routes.draw do
 
   root 'pages#index'
 
+  # Target URL Sample:
+  # 
+  # http://ubooksdevelopment.s3-website-us-east-1.amazonaws.com/documents_html/25/25_optimized.html
+
+  scope '/api' do
+    scope '/v1' do
+      scope '/documents' do
+        get '/' => 'documents#index'
+        post '/' => 'documents#create'
+        scope '/:id' do
+          get '/' => 'documents#show'
+        end
+      end
+    end
+  end
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
