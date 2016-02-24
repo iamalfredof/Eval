@@ -26,8 +26,6 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'dotenv-rails'
 # Aws SDK
 gem 'aws-sdk', '~> 2'
-# Pub/Sub
-gem 'pusher'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
