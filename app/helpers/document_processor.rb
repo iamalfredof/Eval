@@ -71,7 +71,7 @@ private
   		logger.error 'Failed at converting pdf to html'
   		return false
   	else
-  		logger.error 'Processed file'
+  		logger.info 'Processed file'
   		return true
   	end
   end
@@ -86,7 +86,7 @@ private
   def download!
 		open(file_path, 'wb') do |file|
 		  file << open(url).read
-	    logger.error 'Downloaded file'
+	    logger.info 'Downloaded file'
 	    return true
 		end
   end
@@ -101,7 +101,7 @@ private
   def upload!
   	uploader = S3FolderUpload.new(folder)
   	uploader.upload!(50, root_folder + '/')
-  	logger.error 'Uploaded file'
+  	logger.info 'Uploaded file'
   	return true
   end
 
@@ -116,7 +116,7 @@ private
     File.delete( file_path )
     File.delete( file_path_opt )
     FileUtils.rm_rf( folder )
-    logger.error 'Cleaned up'
+    logger.info 'Cleaned up'
     return true
   end
 
