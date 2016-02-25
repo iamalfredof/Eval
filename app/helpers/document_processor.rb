@@ -33,19 +33,19 @@ class DocumentProcessor
   # Returns html_url when finished
   def start_routine 
   	unless download!
-  		logger.error 'Download subroutine failed'
+  		Rails.logger.error 'Download subroutine failed'
   		return false
   	end
   	unless process!
-  		logger.error 'Process subroutine failed'
+  		Rails.logger.error 'Process subroutine failed'
   		return false
   	end
   	unless upload!
-  		logger.error 'Upload subroutine failed'
+  		Rails.logger.error 'Upload subroutine failed'
   		return false
   	end
   	unless clean_up!
-  		logger.error 'Clean up subroutine failed'
+  		Rails.logger.error 'Clean up subroutine failed'
   		return false
   	end
   	return html_url
@@ -63,15 +63,15 @@ private
   def process!
   	%x( gs -sDEVICE=pdfwrite -sOutputFile='#{file_path_opt}' -dNOPAUSE -dBATCH #{file_path} )
   	unless $?.exitstatus == 0
-  		logger.error 'Failed at optimizing pdf'
+  		Rails.logger.error 'Failed at optimizing pdf'
   		return false
   	end
   	%x( pdf2htmlEX --fit-width 1024 --split-pages 1 --dest-dir #{folder} #{file_path_opt} )
   	unless $?.exitstatus == 0
-  		logger.error 'Failed at converting pdf to html'
+  		Rails.logger.error 'Failed at converting pdf to html'
   		return false
   	else
-  		logger.info 'Processed file'
+  		Rails.logger.info 'Processed file'
   		return true
   	end
   end
@@ -86,7 +86,7 @@ private
   def download!
 		open(file_path, 'wb') do |file|
 		  file << open(url).read
-	    logger.info 'Downloaded file'
+	    Rails.logger.info 'Downloaded file'
 	    return true
 		end
   end
@@ -101,7 +101,7 @@ private
   def upload!
   	uploader = S3FolderUpload.new(folder)
   	uploader.upload!(50, root_folder + '/')
-  	logger.info 'Uploaded file'
+  	Rails.logger.info 'Uploaded file'
   	return true
   end
 
@@ -116,7 +116,7 @@ private
     File.delete( file_path )
     File.delete( file_path_opt )
     FileUtils.rm_rf( folder )
-    logger.info 'Cleaned up'
+    Rails.logger.info 'Cleaned up'
     return true
   end
 
