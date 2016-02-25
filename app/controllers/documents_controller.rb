@@ -1,11 +1,11 @@
 class DocumentsController < ApplicationController
 
-	# GET /trips.json
+	# GET /documents.json
 	def index
 		@documents = Document.all
 	end
 
-	# POST /trips.json
+	# POST /documents.json
 	def create
 		@document = Document.create(document_params)
 
@@ -21,7 +21,7 @@ class DocumentsController < ApplicationController
     end
 	end
 
-	# GET /trips/1.json
+	# GET /documents/1.json
 	def show
 		@document = Document.find(params[:id])
 	end
