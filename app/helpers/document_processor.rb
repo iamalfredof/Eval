@@ -33,19 +33,19 @@ class DocumentProcessor
   # Returns html_url when finished
   def start_routine 
   	unless download!
-  		puts 'Download subroutine failed'
+  		logger.error 'Download subroutine failed'
   		return false
   	end
   	unless process!
-  		puts 'Process subroutine failed'
+  		logger.error 'Process subroutine failed'
   		return false
   	end
   	unless upload!
-  		puts 'Upload subroutine failed'
+  		logger.error 'Upload subroutine failed'
   		return false
   	end
   	unless clean_up!
-  		puts 'Clean up subroutine failed'
+  		logger.error 'Clean up subroutine failed'
   		return false
   	end
   	return html_url
@@ -63,15 +63,15 @@ private
   def process!
   	%x( gs -sDEVICE=pdfwrite -sOutputFile='#{file_path_opt}' -dNOPAUSE -dBATCH #{file_path} )
   	unless $?.exitstatus == 0
-  		puts 'Failed at optimizing pdf'
+  		logger.error 'Failed at optimizing pdf'
   		return false
   	end
   	%x( pdf2htmlEX --fit-width 1024 --split-pages 1 --dest-dir #{folder} #{file_path_opt} )
   	unless $?.exitstatus == 0
-  		puts 'Failed at converting pdf to html'
+  		logger.error 'Failed at converting pdf to html'
   		return false
   	else
-  		puts 'Processed file'
+  		logger.error 'Processed file'
   		return true
   	end
   end
@@ -86,7 +86,7 @@ private
   def download!
 		open(file_path, 'wb') do |file|
 		  file << open(url).read
-	    puts 'Downloaded file'
+	    logger.error 'Downloaded file'
 	    return true
 		end
   end
@@ -101,7 +101,7 @@ private
   def upload!
   	uploader = S3FolderUpload.new(folder)
   	uploader.upload!(50, root_folder + '/')
-  	puts 'Uploaded file'
+  	logger.error 'Uploaded file'
   	return true
   end
 
@@ -116,7 +116,7 @@ private
     File.delete( file_path )
     File.delete( file_path_opt )
     FileUtils.rm_rf( folder )
-    puts 'Cleaned up'
+    logger.error 'Cleaned up'
     return true
   end
 
