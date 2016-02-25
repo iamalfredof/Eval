@@ -16,9 +16,9 @@ class DocumentProcessor
   #
   def initialize(url, document_id)
   	@url 						 	= url
-    @file_path       	= '/home/deploy/udoczp2h/current/' + URI(url).path.split('/').last
-    @file_path_opt	 	= '/home/deploy/udoczp2h/current/' + document_id.to_s + '_opt.pdf'
-    @folder           = '/home/deploy/udoczp2h/current/' + document_id.to_s + '-' + SecureRandom.hex
+    @file_path       	= URI(url).path.split('/').last
+    @file_path_opt	 	= document_id.to_s + '_opt.pdf'
+    @folder            = document_id.to_s + '-' + SecureRandom.hex
     @root_folder			= 'documents_html'
     @document_id 			= document_id.to_s
     @html_url					= "http://#{ENV['S3_BUCKET']}.s3-website-#{ENV['AWS_REGION']}.amazonaws.com/#{@root_folder}/#{@folder}/#{@document_id}_opt.html"
@@ -64,10 +64,6 @@ private
   	%x( gs -sDEVICE=pdfwrite -sOutputFile='#{file_path_opt}' -dNOPAUSE -dBATCH #{file_path} )
   	unless $?.exitstatus == 0
   		Rails.logger.error "Failed at optimizing pdf. Command: gs -sDEVICE=pdfwrite -sOutputFile='#{file_path_opt}' -dNOPAUSE -dBATCH #{file_path}"
-      pwd = %x( pwd )
-      ls = %x( ls )
-      Rails.logger.error "pwd: #{pwd}"
-      Rails.logger.error "ls: #{ls}"
   		return false
   	end
   	%x( pdf2htmlEX --fit-width 1024 --split-pages 1 --dest-dir #{folder} #{file_path_opt} )
