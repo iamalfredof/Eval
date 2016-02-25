@@ -13,13 +13,7 @@ Rails.application.routes.draw do
 
   scope '/api' do
     scope '/v1' do
-      scope '/documents' do
-        get '/' => 'documents#index'
-        post '/' => 'documents#create'
-        scope '/:id' do
-          get '/' => 'documents#show'
-        end
-      end
+      resources :documents, only: [:index, :create, :show]
     end
   end
 
