@@ -1,6 +1,5 @@
 require 'uri'
 require 'open-uri'
-require 'pusher'
 require 'fileutils'
 
 class DocumentProcessor
