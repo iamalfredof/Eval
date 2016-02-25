@@ -32,10 +32,22 @@ class DocumentProcessor
   #
   # Returns html_url when finished
   def start_routine 
-  	download!
-  	process!
-  	upload!
-  	clean_up!
+  	unless download!
+  		puts 'Download subroutine failed'
+  		return false
+  	end
+  	unless process!
+  		puts 'Process subroutine failed'
+  		return false
+  	end
+  	unless upload!
+  		puts 'Upload subroutine failed'
+  		return false
+  	end
+  	unless clean_up!
+  		puts 'Clean up subroutine failed'
+  		return false
+  	end
   	return html_url
   end
 

@@ -13,8 +13,12 @@ class DocumentsController < ApplicationController
       if @document.save
       	processor = DocumentProcessor.new(@document.document_url, @document.foreign_document_id)
       	html_url = processor.start_routine
-      	@document.update_attribute(:html_url, html_url)
-        format.json { render :show, status: :created, location: @document }
+      	unless html_url
+      		format.json { render json: @document, status: :processing_failed }
+      	else
+      		@document.update_attribute(:html_url, html_url)
+        	format.json { render :show, status: :created, location: @document }
+      	end
       else
         format.json { render json: @document.errors, status: :unprocessable_entity }
       end
