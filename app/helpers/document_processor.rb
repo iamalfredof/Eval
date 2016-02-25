@@ -16,10 +16,10 @@ class DocumentProcessor
   #
   def initialize(url, document_id)
   	@url 						 	= url
-    @file_path       	= URI(url).path.split('/').last
-    @file_path_opt	 	= document_id.to_s + '_opt.pdf'
+    @file_path       	= '/home/deploy/udoczp2h/current/' + URI(url).path.split('/').last
+    @file_path_opt	 	= '/home/deploy/udoczp2h/current/' + document_id.to_s + '_opt.pdf'
+    @folder           = '/home/deploy/udoczp2h/current/' + document_id.to_s + '-' + SecureRandom.hex
     @root_folder			= 'documents_html'
-    @folder		 				= document_id.to_s + '-' + SecureRandom.hex
     @document_id 			= document_id.to_s
     @html_url					= "http://#{ENV['S3_BUCKET']}.s3-website-#{ENV['AWS_REGION']}.amazonaws.com/#{@root_folder}/#{@folder}/#{@document_id}_opt.html"
   end
