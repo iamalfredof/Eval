@@ -8,8 +8,6 @@ require 'capistrano/bundler'
 require 'capistrano/rails'
 require 'capistrano/passenger'
 
-require 'capistrano/sidekiq'
-require 'capistrano/sidekiq/monit' #to require monit tasks # Only for capistrano3
 set :sidekiq_role, :app  
 set :sidekiq_config, "#{current_path}/config/sidekiq.yml"  
 set :sidekiq_env, 'production'
