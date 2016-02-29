@@ -44,7 +44,7 @@ gem 'capistrano-sidekiq', github: 'seuros/capistrano-sidekiq'
 
 # Add sinatra to enable sidekiq's web UI module
 # gem 'sinatra', :require => nil
-gem 'sidekiq'
+# gem 'sidekiq'
 # gem 'sidekiq-status'
 
 # Add this if you're using rvm
