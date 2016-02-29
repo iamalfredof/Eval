@@ -11,14 +11,11 @@ class DocumentsController < ApplicationController
 
 		respond_to do |format|
       if @document.save
-      	processor = DocumentProcessor.new(@document.foreign_document_url, @document.foreign_document_id)
-      	html_url = processor.start_routine
-      	unless html_url
-      		format.json { render json: @document, status: :processing_failed }
-      	else
-      		@document.update_attribute(:html_url, html_url)
-        	format.json { render :show, status: :created, location: @document }
-      	end
+      	DocumentWorker.perform_async(@document.foreign_document_url, @document.foreign_document_id)
+      	dp = DocumentProcessor.new(@document.foreign_document_url, @document.foreign_document_id)
+      	html_url = dp.get_html_url
+    		@document.update_attribute(:html_url, html_url)
+      	format.json { render :show, status: :created, location: @document }
       else
         format.json { render json: @document.errors, status: :unprocessable_entity }
       end

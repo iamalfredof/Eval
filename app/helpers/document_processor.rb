@@ -51,6 +51,17 @@ class DocumentProcessor
   	return html_url
   end
 
+  # public: Gets the html_url up front. Helps with requests timing out.
+  #
+  # Examples
+  #   => processor.get_html_url
+  #    'http://bucket.s3-website-region.amazonaws.com/root_folder/folder/id_opt.html'
+  #
+  # Returns html_url when finished
+  def get_html_url 
+    return html_url
+  end
+
 private
 
   # private: Process document in location
