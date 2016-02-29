@@ -8,13 +8,6 @@ require 'capistrano/bundler'
 require 'capistrano/rails'
 require 'capistrano/passenger'
 
-require 'capistrano/sidekiq'
-require 'capistrano/sidekiq/monit' #to require monit tasks # Only for capistrano3
-# set :sidekiq_role, :app  
-# set :sidekiq_config, "#{current_path}/config/sidekiq.yml"  
-# set :sidekiq_env, 'production'
-set :pty,  false
-
 # If you are using rvm add these lines:
 require 'capistrano/rvm'
 set :rvm_type, :user
@@ -33,7 +26,7 @@ set :rvm_ruby_version, '2.2.4-p230'
 # require 'capistrano/rvm'
 # require 'capistrano/rbenv'
 # require 'capistrano/chruby'
-require 'capistrano/bundler'
+# require 'capistrano/bundler'
 # require 'capistrano/rails/assets'
 # require 'capistrano/rails/migrations'
 

@@ -6,14 +6,6 @@ GIT
       capistrano (~> 3.0)
       sshkit (~> 1.2)
 
-GIT
-  remote: git://github.com/seuros/capistrano-sidekiq.git
-  revision: 0794cf99be7bfe7f3e6828c4965db135d7e1c20b
-  specs:
-    capistrano-sidekiq (0.5.4)
-      capistrano
-      sidekiq (>= 3.4)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -200,7 +192,6 @@ DEPENDENCIES
   capistrano-passenger
   capistrano-rails (~> 1.1.1)
   capistrano-rvm!
-  capistrano-sidekiq!
   coffee-rails (~> 4.1.0)
   dotenv-rails
   jbuilder (~> 2.0)
@@ -209,6 +200,7 @@ DEPENDENCIES
   rails (= 4.2.5.1)
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
+  sidekiq
   spring
   turbolinks
   uglifier (>= 1.3.0)
