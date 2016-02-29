@@ -8,10 +8,10 @@ set :deploy_to, '/home/deploy/udoczp2h'
 set :linked_files, %w{config/database.yml config/secrets.yml}
 set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 
-set :use_sudo, false
-set :rails_env, "production"
-set :deploy_via, :remote_cache
-set :ssh_options, { user: 'ubuntu', :forward_agent => true, :port => 22, keys: ["#{ENV['HOME']}/.ssh/id_rsa"]}
+# set :use_sudo, false
+# set :rails_env, "production"
+# set :deploy_via, :remote_cache
+# set :ssh_options, { user: 'ubuntu', :forward_agent => true, :port => 22, keys: ["#{ENV['HOME']}/.ssh/id_rsa"]}
 
 namespace :deploy do
 
