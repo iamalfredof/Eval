@@ -19,6 +19,7 @@ set :pty,  false
 require 'capistrano/rvm'
 set :rvm_type, :user
 set :rvm_ruby_version, '2.2.4-p230'
+set :rvm_binary, '~/.rvm/bin/rvm'
 
 # Includes tasks from other gems included in your Gemfile
 #
