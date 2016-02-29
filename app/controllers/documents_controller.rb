@@ -27,7 +27,7 @@ class DocumentsController < ApplicationController
 
 	# GET /documents/1.json
 	def show
-		@document = Document.find(params[:id])
+		@document = Document.where(:foreign_document_id => params[:id]).first
 	end
 
 private
