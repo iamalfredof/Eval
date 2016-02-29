@@ -18,6 +18,8 @@ role :db,  %w{159.203.121.237}
 
 set :stage, :production
 
+set :rvm1_map_bins, fetch(:rvm1_map_bins).to_a.concat(%w(sidekiq sidekiqctl))
+
 # Replace 127.0.0.1 with your server's IP address!
 server '159.203.121.237', user: 'deploy', roles: %w{web app db}
 
