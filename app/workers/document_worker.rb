@@ -1,6 +1,5 @@
 class DocumentWorker
   include Sidekiq::Worker
-  include Sidekiq::Status::Worker
   sidekiq_options :queue => :documents
 
   def perform(foreign_document_url, foreign_document_id)
