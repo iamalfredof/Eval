@@ -34,7 +34,6 @@ namespace :sidekiq do
   end
   task :restart do
     on roles(:app) do
-    	execute :sudo, :initctl, :stop, :workers
       execute :sudo, :initctl, :start, :workers
     end
   end
