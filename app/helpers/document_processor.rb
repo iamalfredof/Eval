@@ -14,11 +14,11 @@ class DocumentProcessor
   #   => processor = DocumentProcessor.new("some_route/pdf_file")
   # 
   #
-  def initialize(url, document_id)
+  def initialize(url, document_id, random_hex)
   	@url 						 	= url
     @file_path       	= URI(url).path.split('/').last
     @file_path_opt	 	= document_id.to_s + '_opt.pdf'
-    @folder            = document_id.to_s + '-' + SecureRandom.hex
+    @folder            = document_id.to_s + '-' + random_hex
     @root_folder			= 'documents_html'
     @document_id 			= document_id.to_s
     @html_url					= "http://#{ENV['S3_BUCKET']}.s3-website-#{ENV['AWS_REGION']}.amazonaws.com/#{@root_folder}/#{@folder}/#{@document_id}_opt.html"

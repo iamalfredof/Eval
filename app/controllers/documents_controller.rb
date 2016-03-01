@@ -11,8 +11,9 @@ class DocumentsController < ApplicationController
 
 		respond_to do |format|
       if @document.save
-      	DocumentWorker.perform_async(@document.foreign_document_url, @document.foreign_document_id)
-      	dp = DocumentProcessor.new(@document.foreign_document_url, @document.foreign_document_id)
+      	random_hex = SecureRandom.hex
+      	DocumentWorker.perform_async(@document.foreign_document_url, @document.foreign_document_id, random_hex)
+      	dp = DocumentProcessor.new(@document.foreign_document_url, @document.foreign_document_id, random_hex)
       	html_url = dp.get_html_url
     		@document.update_attribute(:html_url, html_url)
       	format.json { render :show, status: :created, location: @document }
