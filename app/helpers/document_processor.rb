@@ -48,6 +48,10 @@ class DocumentProcessor
   		Rails.logger.error 'Clean up subroutine failed'
   		return false
   	end
+    unless trigger_callback
+      Rails.logger.error 'Trigger callback subroutine failed'
+      return false
+    end
   	return html_url
   end
 
@@ -128,6 +132,23 @@ private
     File.delete( file_path_opt )
     FileUtils.rm_rf( folder )
     Rails.logger.info 'Cleaned up'
+    return true
+  end
+
+  # private: Callsback a POST request to the udocz.com
+  #
+  # Examples
+  #   => processor.trigger_callback
+  #     true
+  #
+  # Returns true when finished uploading
+  def trigger_callback
+    uri = URI.parse("http://www.udocz.com/")
+    http = Net::HTTP.new(uri.host, uri.port)
+    request = Net::HTTP::Get.new("pdf_processing_callback/" + document_id + ".json")
+    request.add_field('Content-Type', 'application/json')
+    response = http.request(request)
+    Rails.logger.info 'Callback to uDocz'
     return true
   end
 
