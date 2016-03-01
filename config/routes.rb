@@ -7,6 +7,10 @@ Rails.application.routes.draw do
 
   root 'pages#index'
 
+  require 'sidekiq/web'
+  require 'sidekiq-status/web'
+  mount Sidekiq::Web => '/sidekiq'
+
   # Target URL Sample:
   # 
   # http://ubooksdevelopment.s3-website-us-east-1.amazonaws.com/documents_html/25/25_optimized.html

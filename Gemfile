@@ -42,9 +42,9 @@ gem 'capistrano-rails', '~> 1.1.1'
 gem 'capistrano-passenger'
 
 # Add sinatra to enable sidekiq's web UI module
-# gem 'sinatra', :require => nil
+gem 'sinatra', :require => nil
 gem 'sidekiq'
-# gem 'sidekiq-status'
+gem 'sidekiq-status'
 
 # Add this if you're using rvm
 gem 'capistrano-rvm', github: "capistrano/rvm"
