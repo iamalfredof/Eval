@@ -16,7 +16,7 @@ class DocumentWordSearch
 		ocurrences 		= 0		# Number of matches for the query
 		data 					= []	# Array to save the page number and line of the occurence
 		filename			= document_id.to_s + ".txt"
-		document 			= Document.find(document_id)
+		document 			= Document.where(:foreign_document_id => document_id).first
 		base_url			= document.html_url.split('/').pop.join('/') + '/'
 
 		ls = %x( ls )
@@ -37,7 +37,7 @@ class DocumentWordSearch
 	        current_page += 1
 	    end
 		end
-		
+
 		return data
 
 	end
