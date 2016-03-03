@@ -31,7 +31,7 @@ class DocumentsController < ApplicationController
 	# GET /documents/:id/search:query
 	def search
 		dws = DocumentWordSearch.new
-		data = dws.( params[:id], params[:query] )
+		data = dws.search( params[:id], params[:query] )
 		render json: data
 	end
 
