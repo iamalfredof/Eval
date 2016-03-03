@@ -17,7 +17,9 @@ class DocumentWordSearch
 		data 					= []	# Array to save the page number and line of the occurence
 		filename			= document_id.to_s + ".txt"
 		document 			= Document.where(:foreign_document_id => document_id).first
-		base_url			= document.html_url.split('/').pop.join('/') + '/'
+		arr 					= document.html_url.split('/') # Split the url
+		arr.pop				# Pop the last element
+		base_url 			= arr.join('/') + '/' # Join the url again
 
 		ls = %x( ls )
 		# File in cache folder
