@@ -28,6 +28,13 @@ class DocumentsController < ApplicationController
 		@document = Document.where(:foreign_document_id => params[:id]).first
 	end
 
+	# GET /documents/:id/search:query
+	def search
+		dws = DocumentWordSearch.new
+		data = dws.( params[:id], params[:query] )
+		render json: data
+	end
+
 private
 	def document_params
 		params.require(:document).permit(

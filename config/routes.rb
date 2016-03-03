@@ -17,7 +17,11 @@ Rails.application.routes.draw do
 
   scope '/api' do
     scope '/v1' do
-      resources :documents, only: [:index, :create, :show]
+      resources :documents, only: [:index, :create, :show] do
+        member do
+          get :search
+        end
+      end
     end
   end
 

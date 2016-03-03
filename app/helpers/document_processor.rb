@@ -18,7 +18,8 @@ class DocumentProcessor
   	@url 						 	= url
     @file_path       	= URI(url).path.split('/').last
     @file_path_opt	 	= document_id.to_s + '_opt.pdf'
-    @folder            = document_id.to_s + '-' + random_hex
+    @file_path_txt    = document_id.to_s + '.txt'
+    @folder           = document_id.to_s + '-' + random_hex
     @root_folder			= 'documents_html'
     @document_id 			= document_id.to_s
     @html_url					= "http://#{ENV['S3_BUCKET']}.s3-website-#{ENV['AWS_REGION']}.amazonaws.com/#{@root_folder}/#{@folder}/#{@document_id}_opt.html"
@@ -31,7 +32,7 @@ class DocumentProcessor
   #    'http://bucket.s3-website-region.amazonaws.com/root_folder/folder/id_opt.html'
   #
   # Returns html_url when finished
-  def start_routine 
+  def start_routine
   	unless download!
   		Rails.logger.error 'Download subroutine failed'
   		return false
@@ -40,6 +41,10 @@ class DocumentProcessor
   		Rails.logger.error 'Process subroutine failed'
   		return false
   	end
+    unless process_plain_text!
+      Rails.logger.error 'Process plain text subroutine failed'
+      return false
+    end
   	unless upload!
   		Rails.logger.error 'Upload subroutine failed'
   		return false
@@ -66,6 +71,34 @@ class DocumentProcessor
     return html_url
   end
 
+  # public: Processes a plain text copy of the pdf
+  #
+  # Examples
+  #   => processor.process_plain_text
+  #     true
+  #
+  # Returns html_url when finished
+  def process_plain_text_backfill!
+    unless download!
+      Rails.logger.error 'Download subroutine failed'
+      return false
+    end
+    unless process_plain_text_cmd!
+      Rails.logger.error 'Process plain text subroutine failed'
+      return false
+    end
+    unless upload!
+      Rails.logger.error 'Upload subroutine failed'
+      return false
+    end
+    File.delete( file_path )
+    FileUtils.rm_rf( folder )
+    
+    Rails.logger.info 'Cleaned up'
+    Rails.logger.info 'Processed plain text'
+    return true
+  end
+
 private
 
   # private: Process document in location
@@ -89,6 +122,29 @@ private
   		Rails.logger.info 'Processed file'
   		return true
   	end
+  end
+
+  # private: Process document in location for plain text
+  #
+  # Examples
+  #   => processor.process!
+  #     true
+  #
+  # Returns true when finished the process
+  def process_plain_text!
+    %x( pdftotext #{file_path} '#{folder}/#{file_path_txt}' )
+    unless $?.exitstatus == 0
+      Rails.logger.error "Failed at processing plain text. Command: pdftotext #{file_path} '#{folder}/#{file_path_txt}'"
+      return false
+    end
+    %x( cp #{folder}/#{file_path_txt} '../document_txt_cache' )
+    unless $?.exitstatus == 0
+      Rails.logger.error "Failed at copying to cache. Command: cp -b #{folder}/#{file_path_txt} '../document_txt_cache'"
+      return false
+    else
+      Rails.logger.info 'Processed plain text file'
+      return true
+    end
   end
 
   # private: Download pdf in location
