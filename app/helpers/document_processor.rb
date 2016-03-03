@@ -143,7 +143,7 @@ private
     end
     %x( cp #{folder}/#{file_path_txt} ../../document_txt_cache )
     unless $?.exitstatus == 0
-      Rails.logger.error "Failed at copying to cache. Command: cp -b #{folder}/#{file_path_txt} '../document_txt_cache'"
+      Rails.logger.error "Failed at copying to cache. Command: cp #{folder}/#{file_path_txt} ../../document_txt_cache"
       return false
     else
       Rails.logger.info 'Processed plain text file'
