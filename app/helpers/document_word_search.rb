@@ -25,13 +25,13 @@ class DocumentWordSearch
 		ls = %x( ls #{cache_route} )
 		# File in cache folder
 		unless ls.include? filename
-			open('#{cache_route}/' + filename, 'wb') do |file|
+			open( cache_route + '/' + filename, 'wb') do |file|
 			  file << open( base_url + filename ).read
 			end
 		end
 
 		# Read file and build data
-		lines = IO.readlines( '#{cache_route}/' + filename )
+		lines = IO.readlines( cache_route + '/' + filename )
 		for line in lines
 			if line.include? query
 				data << { "p" => current_page, "t" => line  }
