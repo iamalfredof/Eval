@@ -83,7 +83,7 @@ class DocumentProcessor
       Rails.logger.error 'Download subroutine failed'
       return false
     end
-    unless process_plain_text_cmd!
+    unless process_plain_text!
       Rails.logger.error 'Process plain text subroutine failed'
       return false
     end
@@ -93,7 +93,7 @@ class DocumentProcessor
     end
     File.delete( file_path )
     FileUtils.rm_rf( folder )
-    
+
     Rails.logger.info 'Cleaned up'
     Rails.logger.info 'Processed plain text'
     return true

@@ -6,6 +6,7 @@ class BackfillsController < ApplicationController
 		documents.each do |d|
 			random_hex = d.html_url.split('/')[4].split('-').last
 			BackfillWorker.perform_async(d.foreign_document_url, d.foreign_document_id, random_hex)
+			sleep 1
 		end
 	end
 
