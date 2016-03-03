@@ -132,6 +132,10 @@ private
   #
   # Returns true when finished the process
   def process_plain_text!
+    %x( mkdir #{folder} )
+    unless $?.exitstatus == 0
+      Rails.logger.error "Failed at making directory."
+    end
     %x( pdftotext #{file_path} '#{folder}/#{file_path_txt}' )
     unless $?.exitstatus == 0
       Rails.logger.error "Failed at processing plain text. Command: pdftotext #{file_path} '#{folder}/#{file_path_txt}'"
