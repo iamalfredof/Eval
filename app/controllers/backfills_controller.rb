@@ -7,6 +7,7 @@ class BackfillsController < ApplicationController
 	def clean_data
 		# First delete nulls
 		documents = Document.all
+		@prev_num_docs = documents.count
 		documents.each do |d|
 			if d.html_url == nil
 				d.destroy
@@ -32,6 +33,8 @@ class BackfillsController < ApplicationController
 				end
 			end
 		end
+
+		@num_docs = Document.all.count
 
 	end
 
