@@ -3,7 +3,7 @@ require 'open-uri'
 require 'fileutils'
 
 class DocumentProcessor
-  attr_reader :url, :file_path, :file_path_opt, :root_folder, :folder, :document_id, :html_url
+  attr_reader :url, :file_path, :file_path_opt, :file_path_txt, :root_folder, :folder, :document_id, :html_url
   # attr_accessor :files
 
   # Initialize the processor class
