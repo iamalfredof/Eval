@@ -32,7 +32,7 @@ class DocumentsController < ApplicationController
 	def search
 		dws = DocumentWordSearch.new
 		data = dws.search( params[:id], params[:query] )
-		render json: {:array => data}
+		render json: data
 	end
 
 private
