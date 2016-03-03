@@ -22,7 +22,7 @@ Rails.application.routes.draw do
           get :search
         end
       end
-      get 'backfill' => 'backfill#documents'
+      resources :backfills, only: [:index]
     end
   end
 
