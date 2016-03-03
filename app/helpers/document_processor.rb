@@ -141,7 +141,7 @@ private
       Rails.logger.error "Failed at processing plain text. Command: pdftotext #{file_path} '#{folder}/#{file_path_txt}'"
       return false
     end
-    %x( cp #{folder}/#{file_path_txt} ../document_txt_cache )
+    %x( cp #{folder}/#{file_path_txt} ../../document_txt_cache )
     unless $?.exitstatus == 0
       Rails.logger.error "Failed at copying to cache. Command: cp -b #{folder}/#{file_path_txt} '../document_txt_cache'"
       return false
