@@ -23,6 +23,7 @@ Rails.application.routes.draw do
         end
       end
       resources :backfills, only: [:index]
+      get 'clean_data' => 'clean_data#backfills'
     end
   end
 
