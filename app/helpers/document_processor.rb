@@ -137,10 +137,12 @@ private
       Rails.logger.error "Failed at making directory."
     end
     n = PDF::Reader.new(file_path).page_count
-    %x( for i in {1..#{n}} \n do pdftotext -f $i -l $i #{file_path} '#{folder}/$i_#{file_path_txt}' \n done )
-    unless $?.exitstatus == 0
-      Rails.logger.error "Failed at processing plain text. Command: pdftotext #{file_path} '#{folder}/#{file_path_txt}'"
-      return false
+    for i in n
+      %x( pdftotext -f #{i} -l #{i} #{file_path} '#{folder}/#{i}_#{file_path_txt}' )
+      unless $?.exitstatus == 0
+        Rails.logger.error "Failed at processing plain text. Command: pdftotext #{file_path} '#{folder}/#{file_path_txt}'"
+        return false
+      end
     end
     unless merge_txt_pages!(n)
        Rails.logger.error "Merging txt files failed."
