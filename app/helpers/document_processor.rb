@@ -137,7 +137,7 @@ private
       Rails.logger.error "Failed at making directory."
     end
     n = PDF::Reader.new(file_path).page_count
-    for i in n
+    for i in 1..n
       %x( pdftotext -f #{i} -l #{i} #{file_path} '#{folder}/#{i}_#{file_path_txt}' )
       unless $?.exitstatus == 0
         Rails.logger.error "Failed at processing plain text. Command: pdftotext #{file_path} '#{folder}/#{file_path_txt}'"
