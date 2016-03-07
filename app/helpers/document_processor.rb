@@ -166,7 +166,7 @@ private
   #
   # Returns true when finished downloading
   def merge_txt_pages!(n)
-    File.open(file_path_txt,'a') do |mergedFile|
+    File.open(folder + '/' + file_path_txt,'a') do |mergedFile|
       for i in 1..n
         # Read subfile
         lines = IO.readlines( folder + '/' + i.to_s + '_' + file_path_txt )
