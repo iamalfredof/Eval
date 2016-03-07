@@ -136,9 +136,14 @@ private
     unless $?.exitstatus == 0
       Rails.logger.error "Failed at making directory."
     end
-    %x( pdftotext #{file_path} '#{folder}/#{file_path_txt}' )
+    n = PDF::Reader.new(file_path).page_count
+    %x( for i in {1..#{n}} \n do pdftotext -f $i -l $i #{file_path} '#{folder}/$i_#{file_path_txt}' \n done )
     unless $?.exitstatus == 0
       Rails.logger.error "Failed at processing plain text. Command: pdftotext #{file_path} '#{folder}/#{file_path_txt}'"
+      return false
+    end
+    unless merge_txt_pages!(n)
+       Rails.logger.error "Merging txt files failed."
       return false
     end
     %x( cp #{folder}/#{file_path_txt} ../../document_txt_cache )
@@ -149,6 +154,28 @@ private
       Rails.logger.info 'Processed plain text file'
       return true
     end
+  end
+
+  # private: Download pdf in location
+  #
+  # Examples
+  #   => processor.download!
+  #     true
+  #
+  # Returns true when finished downloading
+  def merge_txt_pages!(n)
+    File.open(file_path_txt,'a') do |mergedFile|
+      for i in 1..n
+        # Read subfile
+        lines = IO.readlines( folder + '/' + i.to_s + '_' + file_path_txt )
+        for line in lines
+          mergedFile << line
+        end
+        mergedFile << '<page-break>'
+        File.delete( folder + '/' + i.to_s + '_' + file_path_txt )
+      end
+    end
+    return true
   end
 
   # private: Download pdf in location

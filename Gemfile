@@ -46,6 +46,8 @@ gem 'sinatra', :require => nil
 gem 'sidekiq'
 gem 'sidekiq-status'
 
+gem 'pdf-reader'
+
 # Add this if you're using rvm
 gem 'capistrano-rvm', github: "capistrano/rvm"
 

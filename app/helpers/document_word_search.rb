@@ -36,7 +36,7 @@ class DocumentWordSearch
 			if line.downcase.include? query.downcase
 				data << { "p" => current_page, "t" => line  }
 			end
-	    if line["\f"]
+	    if line["<page-break>"]
 	        current_page += 1
 	    end
 		end
