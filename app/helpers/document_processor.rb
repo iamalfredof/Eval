@@ -132,10 +132,6 @@ private
   #
   # Returns true when finished the process
   def process_plain_text!
-    %x( mkdir #{folder} )
-    unless $?.exitstatus == 0
-      Rails.logger.error "Failed at making directory."
-    end
     n = PDF::Reader.new(file_path).page_count
     for i in 1..n
       %x( pdftotext -f #{i} -l #{i} #{file_path} '#{folder}/#{i}_#{file_path_txt}' )
