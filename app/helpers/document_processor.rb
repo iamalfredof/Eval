@@ -83,7 +83,7 @@ class DocumentProcessor
       Rails.logger.error 'Download subroutine failed'
       return false
     end
-    unless process_plain_text!
+    unless process_plain_text!( true )
       Rails.logger.error 'Process plain text subroutine failed'
       return false
     end
@@ -131,8 +131,16 @@ private
   #     true
   #
   # Returns true when finished the process
-  def process_plain_text!
-    n = PDF::Reader.new(file_path).page_count
+  def process_plain_text!( backfill = false )
+    if backfill
+      %x( mkdir #{folder} )
+      unless $?.exitstatus == 0
+        Rails.logger.error "Failed at making directory."
+      end
+      n = PDF::Reader.new(file_path).page_count
+    else
+      n = PDF::Reader.new(file_path_opt).page_count
+    end
     for i in 1..n
       %x( pdftotext -f #{i} -l #{i} #{file_path} '#{folder}/#{i}_#{file_path_txt}' )
       unless $?.exitstatus == 0
