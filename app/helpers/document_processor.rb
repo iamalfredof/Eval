@@ -119,7 +119,7 @@ private
     if office.start_routine
       file_name_arr  = file_path.split('.')
       file_name_arr.last.replace('pdf')
-      file_path  = file_name_arr.join('.')
+      @file_path  = file_name_arr.join('.')
   
       office_flag = true
     end
@@ -136,7 +136,8 @@ private
   	end
     
     if office_flag
-      %x( cp #{file_path} #{folder}/#{file_path} )
+      simple_file_name = file_path.split('%2F').last
+      %x( cp #{file_path} #{folder}/#{simple_file_name} )
       unless $?.exitstatus == 0
         Rails.logger.error "Failed at copying converted office2pdf to folder. Command: cp #{file_path} #{folder}/#{file_path}"
         return false
