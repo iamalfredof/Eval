@@ -122,9 +122,12 @@ private
 					"xlt95"     # Microsoft Excel 95 Template [.xlt]
 		]
 
-		return 	document_formats.include?(extension) or
-						presentation_formats.include?(extension) or
-						spreadsheet_formats.include?(extension)
+		if document_formats.include?(extension) or presentation_formats.include?(extension) or spreadsheet_formats.include?(extension)
+			return true
+		else
+			return false
+		end
+		
 	end
 
 	def convert_to_pdf
