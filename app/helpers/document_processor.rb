@@ -3,7 +3,8 @@ require 'open-uri'
 require 'fileutils'
 
 class DocumentProcessor
-  attr_reader :url, :file_path, :file_path_opt, :file_path_txt, :root_folder, :folder, :document_id, :html_url
+  attr_reader :url, :file_path_opt, :file_path_txt, :root_folder, :folder, :document_id, :html_url
+  attr_accessor :file_path, :office_flag
   # attr_accessor :files
 
   # Initialize the processor class
@@ -23,6 +24,7 @@ class DocumentProcessor
     @root_folder			= 'documents_html'
     @document_id 			= document_id.to_s
     @html_url					= "http://#{ENV['S3_BUCKET']}.s3-website-#{ENV['AWS_REGION']}.amazonaws.com/#{@root_folder}/#{@folder}/#{@document_id}_opt.html"
+    @office_flag      = false
   end
 
 	# public: Runs the whole routine
@@ -109,6 +111,24 @@ private
   #
   # Returns true when finished the process
   def process!
+    # Detects office extensions
+    # Converts to pdf
+    # Cleans office file from file system
+    # Makes a copy of the pdf to the upload folder
+    office = OfficeProcessor.new(file_path)
+    if office.start_routine
+      file_name_arr  = file_path.split('.')
+      file_name_arr.last.replace('pdf')
+      file_path  = file_name_arr.join('.')
+  
+      %x( cp #{file_path} #{folder}/#{file_path} )
+      unless $?.exitstatus == 0
+        Rails.logger.error "Failed at copying converted office2pdf to folder. Command: cp #{file_path} #{folder}/#{file_path}"
+        return false
+      end
+      office_flag = true
+    end
+
   	%x( gs -sDEVICE=pdfwrite -sOutputFile='#{file_path_opt}' -dNOPAUSE -dBATCH #{file_path} )
   	unless $?.exitstatus == 0
   		Rails.logger.error "Failed at optimizing pdf. Command: gs -sDEVICE=pdfwrite -sOutputFile='#{file_path_opt}' -dNOPAUSE -dBATCH #{file_path}"
@@ -236,12 +256,21 @@ private
   #
   # Returns true when finished uploading
   def trigger_callback
+    if office_flag
+      uri = URI.parse("http://www.udocz.com/")
+      http = Net::HTTP.new(uri.host, uri.port)
+      request = Net::HTTP::Get.new("office_processing_callback/" + document_id + ".json")
+      request.add_field('Content-Type', 'application/json')
+      response = http.request(request)
+    end
+
     uri = URI.parse("http://www.udocz.com/")
     http = Net::HTTP.new(uri.host, uri.port)
     request = Net::HTTP::Get.new("pdf_processing_callback/" + document_id + ".json")
     request.add_field('Content-Type', 'application/json')
     response = http.request(request)
     Rails.logger.info 'Callback to uDocz'
+    
     return true
   end
 
