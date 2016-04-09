@@ -263,14 +263,16 @@ private
     if office_flag
       uri = URI.parse("http://www.udocz.com/")
       http = Net::HTTP.new(uri.host, uri.port)
-      request = Net::HTTP::Get.new("office_processing_callback/" + document_id + ".json")
+      request = Net::HTTP::Get.new("api/v1/office_processing_callback/" + document_id + ".json")
       request.add_field('Content-Type', 'application/json')
       response = http.request(request)
+
+      Rails.logger.info 'Office callback to uDocz'
     end
 
     uri = URI.parse("http://www.udocz.com/")
     http = Net::HTTP.new(uri.host, uri.port)
-    request = Net::HTTP::Get.new("pdf_processing_callback/" + document_id + ".json")
+    request = Net::HTTP::Get.new("api/v1/pdf_processing_callback/" + document_id + ".json")
     request.add_field('Content-Type', 'application/json')
     response = http.request(request)
     Rails.logger.info 'Callback to uDocz'
