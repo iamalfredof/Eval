@@ -121,7 +121,7 @@ private
       file_name_arr.last.replace('pdf')
       @file_path  = file_name_arr.join('.')
   
-      office_flag = true
+      @office_flag = true
     end
 
   	%x( gs -sDEVICE=pdfwrite -sOutputFile='#{file_path_opt}' -dNOPAUSE -dBATCH #{file_path} )
