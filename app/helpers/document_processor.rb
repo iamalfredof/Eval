@@ -121,11 +121,6 @@ private
       file_name_arr.last.replace('pdf')
       file_path  = file_name_arr.join('.')
   
-      %x( cp #{file_path} #{folder}/#{file_path} )
-      unless $?.exitstatus == 0
-        Rails.logger.error "Failed at copying converted office2pdf to folder. Command: cp #{file_path} #{folder}/#{file_path}"
-        return false
-      end
       office_flag = true
     end
 
@@ -138,10 +133,18 @@ private
   	unless $?.exitstatus == 0
   		Rails.logger.error "Failed at converting pdf to html. Command: pdf2htmlEX --fit-width 1024 --split-pages 1 --dest-dir #{folder} #{file_path_opt}"
   		return false
-  	else
-  		Rails.logger.info 'Processed file'
-  		return true
   	end
+    
+    if office_flag
+      %x( cp #{file_path} #{folder}/#{file_path} )
+      unless $?.exitstatus == 0
+        Rails.logger.error "Failed at copying converted office2pdf to folder. Command: cp #{file_path} #{folder}/#{file_path}"
+        return false
+      end
+    end
+
+		Rails.logger.info 'Processed file'
+		return true
   end
 
   # private: Process document in location for plain text
@@ -270,7 +273,7 @@ private
     request.add_field('Content-Type', 'application/json')
     response = http.request(request)
     Rails.logger.info 'Callback to uDocz'
-    
+
     return true
   end
 
