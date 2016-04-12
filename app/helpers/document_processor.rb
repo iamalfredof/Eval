@@ -136,7 +136,7 @@ private
   	end
     
     if office_flag
-      simple_file_name = file_path.split('%2F').last
+      simple_file_name = document_id + '.pdf'
       %x( cp #{file_path} #{folder}/#{simple_file_name} )
       unless $?.exitstatus == 0
         Rails.logger.error "Failed at copying converted office2pdf to folder. Command: cp #{file_path} #{folder}/#{file_path}"
