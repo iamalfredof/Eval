@@ -261,11 +261,11 @@ private
   # Returns true when finished uploading
   def trigger_callback
     if office_flag
-      uri = URI.parse("http://www.udocz.com/")
-      http = Net::HTTP.new(uri.host, uri.port)
-      request = Net::HTTP::Get.new("api/v1/office_processing_callback/" + document_id + ".json")
-      request.add_field('Content-Type', 'application/json')
-      response = http.request(request)
+      uri2 = URI.parse("http://www.udocz.com/")
+      http2 = Net::HTTP.new(uri2.host, uri2.port)
+      request2 = Net::HTTP::Get.new("api/v1/office_processing_callback/" + document_id + ".json")
+      request2.add_field('Content-Type', 'application/json')
+      response2 = http2.request(request2)
 
       Rails.logger.info 'Office callback to uDocz'
     end
