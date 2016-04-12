@@ -263,9 +263,10 @@ private
     if office_flag
       response = open('https://www.udocz.com/api/v1/office_processing_callback/' + document_id + '.json', {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read
       Rails.logger.info 'Office callback to uDocz'
+    else
+      response = open('https://www.udocz.com/api/v1/pdf_processing_callback/' + document_id + '.json', {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read
+      Rails.logger.info 'Normal PDF Callback to uDocz'
     end
-    response = open('https://www.udocz.com/api/v1/pdf_processing_callback/' + document_id + '.json', {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read
-    Rails.logger.info 'Callback to uDocz'
 
     return true
   end
