@@ -1,4 +1,5 @@
 class DocumentsController < ApplicationController
+  before_action :verify_security_token, only: [:create]
 
 	# GET /documents.json
 	def index
@@ -41,5 +42,11 @@ private
 							:foreign_document_id, :foreign_document_url
   					 )
 	end
+
+	def verify_security_token
+  	unless params[:secret] == '64zNYufgM8dL1x506FY092uKbms23tT7'
+  		render status: :forbidden, text: "You do not have access to this page."
+  	end
+  end
 
 end
