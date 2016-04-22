@@ -8,8 +8,6 @@ class DocumentsController < ApplicationController
 
 	# POST /documents.json
 	def create
-		@document = Document.create(document_params)
-
 		respond_to do |format|
       if @document.save
       	random_hex = SecureRandom.hex
@@ -44,7 +42,9 @@ private
 	end
 
 	def verify_security_token
-  	unless params[:document][:secret] == '64zNYufgM8dL1x506FY092uKbms23tT7'
+		@document = Document.create(document_params)
+
+  	unless @document.secret == '64zNYufgM8dL1x506FY092uKbms23tT7'
   		render status: :forbidden, text: "You do not have access to this page."
   	end
   end

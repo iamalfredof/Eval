@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160225163400) do
+ActiveRecord::Schema.define(version: 20160422142755) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 20160225163400) do
     t.integer "foreign_document_id"
     t.string  "foreign_document_url"
     t.string  "html_url"
+    t.string  "secret"
   end
 
 end
