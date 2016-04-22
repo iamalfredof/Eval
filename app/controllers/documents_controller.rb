@@ -39,12 +39,12 @@ class DocumentsController < ApplicationController
 private
 	def document_params
 		params.require(:document).permit(
-							:foreign_document_id, :foreign_document_url
+							:foreign_document_id, :foreign_document_url, :secret
   					 )
 	end
 
 	def verify_security_token
-  	unless params[:secret] == '64zNYufgM8dL1x506FY092uKbms23tT7'
+  	unless params[:document][:secret] == '64zNYufgM8dL1x506FY092uKbms23tT7'
   		render status: :forbidden, text: "You do not have access to this page."
   	end
   end
