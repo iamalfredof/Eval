@@ -54,6 +54,7 @@ private
 
 		presentation_formats = [
 					"pptx",			# Originaly unlisted but still possible
+					"pps",
 					"bmp",      # Windows Bitmap [.bmp]
 					"emf",      # Enhanced Metafile [.emf]
 					"eps",      # Encapsulated PostScript [.eps]
