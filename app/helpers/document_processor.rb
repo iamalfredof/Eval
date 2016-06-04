@@ -201,11 +201,13 @@ private
           Rails.logger.error "Failed at pdf to ppm. Command: pdftoppm #{file_path} -gray -r 300 -f #{i} -l #{i} -singlefile '#{i}_out'"
           return false
         end
+        Rails.logger.info 'Out: ' + i.to_s + '_out.pgm'
         %x( tesseract '#{i}_out.pgm' '#{folder}/#{i}_#{file_path_txt}' )
         unless $?.exitstatus == 0
           Rails.logger.error "Failed at OCR. Command: tesseract '#{i}_out.pgm' '#{folder}/#{i}_#{file_path_txt}'"
           return false
         end
+        Rails.logger.info 'Out: ' + i.to_s + '_' + 'file_path_txt'
         # TODO: Clean pgm's here
         file_to_delete = i.to_s + '_out.pgm'
         File.delete( file_to_delete )
