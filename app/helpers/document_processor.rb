@@ -202,12 +202,13 @@ private
           return false
         end
         Rails.logger.info 'Out: ' + i.to_s + '_out.pgm'
-        %x( tesseract '#{i}_out.pgm' '#{folder}/#{i}_#{file_path_txt}' )
+        file_path_txt_stripped = file_path_txt.gsub('.txt','')
+        %x( tesseract '#{i}_out.pgm' '#{folder}/#{i}_#{file_path_txt_stripped}' )
         unless $?.exitstatus == 0
-          Rails.logger.error "Failed at OCR. Command: tesseract '#{i}_out.pgm' '#{folder}/#{i}_#{file_path_txt}'"
+          Rails.logger.error "Failed at OCR. Command: tesseract '#{i}_out.pgm' '#{folder}/#{i}_#{file_path_txt_stripped}'"
           return false
         end
-        Rails.logger.info 'Out: ' + i.to_s + '_' + 'file_path_txt'
+        Rails.logger.info 'Out: ' + i.to_s + '_' + file_path_txt
         # TODO: Clean pgm's here
         file_to_delete = i.to_s + '_out.pgm'
         File.delete( file_to_delete )
