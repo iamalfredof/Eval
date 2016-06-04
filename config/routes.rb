@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       resources :documents, only: [:index, :create, :show] do
         member do
           get :search
+          get :ocr
         end
       end
       resources :backfills, only: [:index]

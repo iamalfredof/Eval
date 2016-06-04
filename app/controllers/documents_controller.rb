@@ -1,5 +1,6 @@
 class DocumentsController < ApplicationController
   before_action :verify_security_token, only: [:create]
+  before_action :verify_security_token_ocr, only: [:ocr]
 
 	# GET /documents.json
 	def index
@@ -34,6 +35,12 @@ class DocumentsController < ApplicationController
 		render json: data
 	end
 
+	# GET /documents/:id/ocr:secret
+	def ocr
+		OCRWorker.perform_async(@document.foreign_document_url, @document.foreign_document_id, @document.html_url.split('/')[4].split('-')[1])
+		render json: {status: '200', ocr: 'Is a go'}.to_json
+	end
+
 private
 	def document_params
 		params.require(:document).permit(
@@ -45,6 +52,14 @@ private
 		@document = Document.create(document_params)
 
   	unless @document.secret == '64zNYufgM8dL1x506FY092uKbms23tT7'
+  		render status: :forbidden, text: "You do not have access to this page."
+  	end
+  end
+
+  def verify_security_token_ocr
+		@document = Document.where(:foreign_document_id => params[:id]).first
+
+  	unless params[:secret] == '64zNYufgM8dL1x506FY092uKbms23tT7'
   		render status: :forbidden, text: "You do not have access to this page."
   	end
   end

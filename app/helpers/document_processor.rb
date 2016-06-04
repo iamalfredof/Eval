@@ -76,16 +76,44 @@ class DocumentProcessor
   # public: Processes a plain text copy of the pdf
   #
   # Examples
+  #   => processor.process_plain_text_ocr!
+  #     true
+  #
+  # Returns true when finished
+  def process_plain_text_ocr!
+    unless download!
+      Rails.logger.error 'Download subroutine failed'
+      return false
+    end
+    unless process_plain_text!( true, true )
+      Rails.logger.error 'Process plain text subroutine failed'
+      return false
+    end
+    unless upload!
+      Rails.logger.error 'Upload subroutine failed'
+      return false
+    end
+    File.delete( file_path )
+    FileUtils.rm_rf( folder )
+
+    Rails.logger.info 'Cleaned up'
+    Rails.logger.info 'Processed plain text'
+    return true
+  end
+
+  # public: Processes a plain text copy of the pdf
+  #
+  # Examples
   #   => processor.process_plain_text
   #     true
   #
-  # Returns html_url when finished
+  # Returns true when finished
   def process_plain_text_backfill!
     unless download!
       Rails.logger.error 'Download subroutine failed'
       return false
     end
-    unless process_plain_text!( true )
+    unless process_plain_text!( true, false )
       Rails.logger.error 'Process plain text subroutine failed'
       return false
     end
@@ -155,7 +183,7 @@ private
   #     true
   #
   # Returns true when finished the process
-  def process_plain_text!( backfill = false )
+  def process_plain_text!( backfill = false, ocr = false )
     if backfill
       %x( mkdir #{folder} )
       unless $?.exitstatus == 0
@@ -166,10 +194,27 @@ private
       n = PDF::Reader.new(file_path_opt).page_count
     end
     for i in 1..n
-      %x( pdftotext -f #{i} -l #{i} #{file_path} '#{folder}/#{i}_#{file_path_txt}' )
-      unless $?.exitstatus == 0
-        Rails.logger.error "Failed at processing plain text. Command: pdftotext #{file_path} '#{folder}/#{file_path_txt}'"
-        return false
+      if ocr
+        # TODO: This will generate image versions so we need to clean them later
+        %x( pdftoppm #{file_path} -gray -r 300 -f #{i} -l #{i} -singlefile '#{i}_out' )
+        unless $?.exitstatus == 0
+          Rails.logger.error "Failed at pdf to ppm. Command: pdftoppm #{file_path} -gray -r 300 -f #{i} -l #{i} -singlefile '#{i}_out'"
+          return false
+        end
+        %x( tesseract '#{i}_out.pgm' '#{folder}/#{i}_#{file_path_txt}' )
+        unless $?.exitstatus == 0
+          Rails.logger.error "Failed at OCR. Command: tesseract '#{i}_out.pgm' '#{folder}/#{i}_#{file_path_txt}'"
+          return false
+        end
+        # TODO: Clean pgm's here
+        file_to_delete = i.to_s + '_out.pgm'
+        File.delete( file_to_delete )
+      else
+        %x( pdftotext -f #{i} -l #{i} #{file_path} '#{folder}/#{i}_#{file_path_txt}' )
+        unless $?.exitstatus == 0
+          Rails.logger.error "Failed at processing plain text. Command: pdftotext #{file_path} '#{folder}/#{file_path_txt}'"
+          return false
+        end
       end
     end
     unless merge_txt_pages!(n)
