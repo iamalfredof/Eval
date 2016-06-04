@@ -45,7 +45,6 @@ gem 'capistrano-passenger'
 gem 'sinatra', :require => nil
 gem 'sidekiq'
 gem 'sidekiq-status'
-gem 'pusher'
 
 gem 'pdf-reader'
 
