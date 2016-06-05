@@ -196,21 +196,21 @@ private
     for i in 1..n
       if ocr
         # TODO: This will generate image versions so we need to clean them later
-        %x( pdftoppm #{file_path} -gray -r 300 -f #{i} -l #{i} -singlefile '#{i}_out' )
+        %x( pdftoppm #{file_path} -gray -r 300 -f #{i} -l #{i} -singlefile '#{folder}/#{i}_out' )
         unless $?.exitstatus == 0
-          Rails.logger.error "Failed at pdf to ppm. Command: pdftoppm #{file_path} -gray -r 300 -f #{i} -l #{i} -singlefile '#{i}_out'"
+          Rails.logger.error "Failed at pdf to ppm. Command: pdftoppm #{file_path} -gray -r 300 -f #{i} -l #{i} -singlefile '#{folder}/#{i}_out'"
           return false
         end
         Rails.logger.info 'Out: ' + i.to_s + '_out.pgm'
         file_path_txt_stripped = file_path_txt.gsub('.txt','')
-        %x( tesseract '#{i}_out.pgm' '#{folder}/#{i}_#{file_path_txt_stripped}' )
+        %x( tesseract '#{folder}/#{i}_out.pgm' '#{folder}/#{i}_#{file_path_txt_stripped}' )
         unless $?.exitstatus == 0
-          Rails.logger.error "Failed at OCR. Command: tesseract '#{i}_out.pgm' '#{folder}/#{i}_#{file_path_txt_stripped}'"
+          Rails.logger.error "Failed at OCR. Command: tesseract '#{folder}/#{i}_out.pgm' '#{folder}/#{i}_#{file_path_txt_stripped}'"
           return false
         end
-        Rails.logger.info 'Out: ' + i.to_s + '_' + file_path_txt
+        Rails.logger.info 'Out: ' + folder + '/' + i.to_s + '_' + file_path_txt
         # TODO: Clean pgm's here
-        file_to_delete = i.to_s + '_out.pgm'
+        file_to_delete = folder + '/' + i.to_s + '_out.pgm'
         File.delete( file_to_delete )
       else
         %x( pdftotext -f #{i} -l #{i} #{file_path} '#{folder}/#{i}_#{file_path_txt}' )
