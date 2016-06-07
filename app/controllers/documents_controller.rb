@@ -43,7 +43,7 @@ class DocumentsController < ApplicationController
 
 	# GET /documents/:id/non_optimized:secret
 	def pno
-		NonOptimizedWorker.perform_async(@document.foreign_document_url, @document.foreign_document_id, @document.html_url.split('/')[4].split('-')[1])
+		PNOWorker.perform_async(@document.foreign_document_url, @document.foreign_document_id, @document.html_url.split('/')[4].split('-')[1])
 		render json: {status: '200', pno: 'Is a go'}.to_json
 	end
 
