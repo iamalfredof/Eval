@@ -1,6 +1,6 @@
 class DocumentsController < ApplicationController
   before_action :verify_security_token, only: [:create]
-  before_action :verify_security_token_get, only: [:ocr, :process_non_optimized]
+  before_action :verify_security_token_get, only: [:ocr, :pno]
 
 	# GET /documents.json
 	def index
