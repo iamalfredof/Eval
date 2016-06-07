@@ -185,7 +185,7 @@ private
     		Rails.logger.error "Failed at optimizing pdf. Command: gs -sDEVICE=pdfwrite -sOutputFile='#{file_path_opt}' -dNOPAUSE -dBATCH #{file_path}"
     		return false
     	end
-    else
+    end
   	%x( pdf2htmlEX --fit-width 1024 --split-pages 1 --dest-dir #{folder} #{file_path_opt} )
   	unless $?.exitstatus == 0
   		Rails.logger.error "Failed at converting pdf to html. Command: pdf2htmlEX --fit-width 1024 --split-pages 1 --dest-dir #{folder} #{file_path_opt}"
