@@ -142,7 +142,7 @@ class DocumentProcessor
       Rails.logger.error 'Upload subroutine failed'
       return false
     end
-    unless clean_up!
+    unless clean_up!(true)
       Rails.logger.error 'Clean up subroutine failed'
       return false
     end
@@ -317,9 +317,11 @@ private
   #     true
   #
   # Returns true when finished uploading
-  def clean_up!
+  def clean_up!(non_optimized = false)
     File.delete( file_path )
-    File.delete( file_path_opt )
+    unless non_optimized
+      File.delete( file_path_opt )
+    end
     FileUtils.rm_rf( folder )
     Rails.logger.info 'Cleaned up'
     return true
