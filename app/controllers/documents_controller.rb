@@ -1,6 +1,6 @@
 class DocumentsController < ApplicationController
   before_action :verify_security_token, only: [:create]
-  before_action :verify_security_token_ocr, only: [:ocr]
+  before_action :verify_security_token_get, only: [:ocr, :process_non_optimized]
 
 	# GET /documents.json
 	def index
@@ -41,6 +41,12 @@ class DocumentsController < ApplicationController
 		render json: {status: '200', ocr: 'Is a go'}.to_json
 	end
 
+	# GET /documents/:id/non_optimized:secret
+	def pno
+		NonOptimizedWorker.perform_async(@document.foreign_document_url, @document.foreign_document_id, @document.html_url.split('/')[4].split('-')[1])
+		render json: {status: '200', pno: 'Is a go'}.to_json
+	end
+
 private
 	def document_params
 		params.require(:document).permit(
@@ -56,7 +62,7 @@ private
   	end
   end
 
-  def verify_security_token_ocr
+  def verify_security_token_get
 		@document = Document.where(:foreign_document_id => params[:id]).first
 
   	unless params[:secret] == '64zNYufgM8dL1x506FY092uKbms23tT7'

@@ -129,6 +129,26 @@ class DocumentProcessor
     return true
   end
 
+  def process_non_optimized!
+    unless download!
+      Rails.logger.error 'Download subroutine failed'
+      return false
+    end
+    unless process!(true)
+      Rails.logger.error 'Process subroutine failed'
+      return false
+    end
+    unless upload!
+      Rails.logger.error 'Upload subroutine failed'
+      return false
+    end
+    unless clean_up!
+      Rails.logger.error 'Clean up subroutine failed'
+      return false
+    end
+    return html_url
+  end
+
 private
 
   # private: Process document in location
@@ -138,7 +158,7 @@ private
   #     true
   #
   # Returns true when finished the process
-  def process!
+  def process!(non_optimized = false)
     # Detects office extensions
     # Converts to pdf
     # Cleans office file from file system
@@ -152,11 +172,20 @@ private
       @office_flag = true
     end
 
-  	%x( gs -sDEVICE=pdfwrite -sOutputFile='#{file_path_opt}' -dNOPAUSE -dBATCH #{file_path} )
-  	unless $?.exitstatus == 0
-  		Rails.logger.error "Failed at optimizing pdf. Command: gs -sDEVICE=pdfwrite -sOutputFile='#{file_path_opt}' -dNOPAUSE -dBATCH #{file_path}"
-  		return false
-  	end
+    # By pass the optimization feature upon special request
+    if non_optimized
+      %x( mv #{file_path} #{file_path_opt} )
+      unless $?.exitstatus == 0
+        Rails.logger.error "Failed at optimizing pdf. Command: mv #{file_path} #{file_path_opt}"
+        return false
+      end
+    else
+      %x( gs -sDEVICE=pdfwrite -sOutputFile='#{file_path_opt}' -dNOPAUSE -dBATCH #{file_path} )
+    	unless $?.exitstatus == 0
+    		Rails.logger.error "Failed at optimizing pdf. Command: gs -sDEVICE=pdfwrite -sOutputFile='#{file_path_opt}' -dNOPAUSE -dBATCH #{file_path}"
+    		return false
+    	end
+    else
   	%x( pdf2htmlEX --fit-width 1024 --split-pages 1 --dest-dir #{folder} #{file_path_opt} )
   	unless $?.exitstatus == 0
   		Rails.logger.error "Failed at converting pdf to html. Command: pdf2htmlEX --fit-width 1024 --split-pages 1 --dest-dir #{folder} #{file_path_opt}"

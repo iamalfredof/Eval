@@ -21,6 +21,7 @@ Rails.application.routes.draw do
         member do
           get :search
           get :ocr
+          get :pno
         end
       end
       resources :backfills, only: [:index]
