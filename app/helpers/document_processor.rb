@@ -174,11 +174,7 @@ private
 
     # By pass the optimization feature upon special request
     if non_optimized
-      %x( mv #{file_path} #{file_path_opt} )
-      unless $?.exitstatus == 0
-        Rails.logger.error "Failed at optimizing pdf. Command: mv #{file_path} #{file_path_opt}"
-        return false
-      end
+      @file_path_opt = file_path
     else
       %x( gs -sDEVICE=pdfwrite -sOutputFile='#{file_path_opt}' -dNOPAUSE -dBATCH #{file_path} )
     	unless $?.exitstatus == 0
