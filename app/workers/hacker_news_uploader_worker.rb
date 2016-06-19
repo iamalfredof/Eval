@@ -32,6 +32,10 @@ class HackerNewsUploaderWorker
     uploader = S3FolderUpload.new(folder_path)
     uploader.upload!(2, 'uploads/book/raw/')
 
+    # Clean files
+    File.delete( file_path )
+    FileUtils.rm_rf( folder )
+
     # Send request to udocz
     response = HTTParty.post('https://www.udocz.com/api/v1/create_document',
                 :body => {
