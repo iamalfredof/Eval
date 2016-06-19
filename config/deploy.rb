@@ -8,6 +8,8 @@ set :deploy_to, '/home/deploy/udoczp2h'
 set :linked_files, %w{config/database.yml config/secrets.yml}
 set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 
+set :whenever_identifier, ->{ "#{fetch(:application)}_#{fetch(:stage)}" }
+
 # set :use_sudo, false
 # set :rails_env, "production"
 # set :deploy_via, :remote_cache

@@ -8,6 +8,7 @@ require 'capistrano/bundler'
 require 'capistrano/rails'
 require 'capistrano/passenger'
 require 'capistrano/rails/console'
+require "whenever/capistrano"
 
 # If you are using rvm add these lines:
 require 'capistrano/rvm'
