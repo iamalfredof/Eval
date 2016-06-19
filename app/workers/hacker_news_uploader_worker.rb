@@ -10,17 +10,18 @@ class HackerNewsUploaderWorker
   def perform(hn_id)
     folder_path = Time.now.to_s + '-HN-' + SecureRandom.hex
     post = HackerNewsPost.where(:hn_id => hn_id).first
-    file_path = post.title
-
-    # Download File
-    open(file_path, 'wb') do |file|
-      file << open(post.url).read
-    end
+    file_path = folder_path + "/" + post.title
 
     # Create dir
     %x( mkdir #{folder_path} )
     unless $?.exitstatus == 0
       Rails.logger.error "Failed at making directory."
+    end
+
+
+    # Download File
+    open(file_path, 'wb') do |file|
+      file << open(post.url).read
     end
 
     # Move file to dir
