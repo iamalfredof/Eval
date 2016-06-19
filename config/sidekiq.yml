@@ -1,8 +1,6 @@
 ---
 :concurrency: 5
 :pidfile: tmp/pids/sidekiq.pid
-development:
-  :concurrency: 20
 staging:
   :concurrency: 10
 production:
@@ -10,6 +8,3 @@ production:
 :queues:
   - default
   - [myqueue, 2]
-schedule:
-  HackerNews:
-    every: 1m

@@ -9,7 +9,6 @@ Rails.application.routes.draw do
 
   require 'sidekiq/web'
   require 'sidekiq-status/web'
-  require 'sidekiq-scheduler/web'
   mount Sidekiq::Web => '/sidekiq'
 
   # Target URL Sample:

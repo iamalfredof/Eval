@@ -48,7 +48,6 @@ gem 'capistrano-rails-console'
 gem 'sinatra', :require => nil
 gem 'sidekiq'
 gem 'sidekiq-status'
-gem 'sidekiq-scheduler', '~> 2.0'
 
 gem 'pdf-reader'
 
