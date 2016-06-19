@@ -20,6 +20,6 @@
 # Learn more: http://github.com/javan/whenever
 
 # every :hour do
-every :day, :at => '12:57am' do
-	command "HackerNewsPost.search_hacker_news"
+every 5.minutes do
+	command "HackerNewsWorker.perform_async"
 end
