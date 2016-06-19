@@ -34,7 +34,7 @@ class HackerNewsUploaderWorker
     uploader.upload!(2, 'uploads/book/raw/')
 
     # Clean files
-    FileUtils.delete( folder_path + '/' + file_path )
+    File.delete( folder_path + '/' + file_path )
     FileUtils.rm_rf( folder_path )
 
     # Send request to udocz
