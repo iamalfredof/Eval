@@ -10,3 +10,6 @@ production:
 :queues:
   - default
   - [myqueue, 2]
+schedule:
+  HackerNews:
+    every: 1m
