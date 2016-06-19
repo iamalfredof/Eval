@@ -26,8 +26,6 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'dotenv-rails'
 # Aws SDK
 gem 'aws-sdk', '~> 2'
-# Cron jobs
-gem 'whenever', :require => false
 #connect apis
 gem 'httparty'
 
@@ -50,6 +48,7 @@ gem 'capistrano-rails-console'
 gem 'sinatra', :require => nil
 gem 'sidekiq'
 gem 'sidekiq-status'
+gem 'sidekiq-scheduler', '~> 2.0'
 
 gem 'pdf-reader'
 
