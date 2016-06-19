@@ -4,7 +4,7 @@ class HackerNewsWorker
   sidekiq_options :queue => :default
 
   def perform
-    HackerNewsPost.schedule_hn
+    HackerNewsPost.new.schedule_hn
 
     current_top_ids = HTTParty.get("https://hacker-news.firebaseio.com/v0/topstories.json")
 
