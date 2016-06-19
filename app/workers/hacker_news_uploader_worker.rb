@@ -8,7 +8,7 @@ class HackerNewsUploaderWorker
   sidekiq_options :queue => :default
 
   def perform(hn_id)
-    folder_path = 'HN-' + SecureRandom.hex
+    folder_path = Time.now.to_s + 'HN-' + SecureRandom.hex
     post = HackerNewsPost.where(:hn_id => hn_id).first
     file_path = post.title
 
@@ -33,7 +33,8 @@ class HackerNewsUploaderWorker
     uploader.upload!(2, 'uploads/book/raw/')
 
     # Clean files
-    FileUtils.rm_rf( folder )
+    FileUtils.delete( folder_path + '/' + file_path )
+    FileUtils.rm_rf( folder_path )
 
     # Send request to udocz
     response = HTTParty.post('https://www.udocz.com/api/v1/create_document',
