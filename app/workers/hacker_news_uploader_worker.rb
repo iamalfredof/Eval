@@ -13,10 +13,7 @@ class HackerNewsUploaderWorker
     file_path = folder_path + "/" + post.title
 
     # Create dir
-    %x( mkdir #{folder_path} )
-    unless $?.exitstatus == 0
-      Rails.logger.error "Failed at making directory."
-    end
+    FileUtils.mkdir folder_path
 
 
     # Download File
