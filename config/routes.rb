@@ -29,6 +29,7 @@ Rails.application.routes.draw do
       get 'clean_data' => 'backfills#clean_data'
       get 'init_hn_worker' => 'backfills#init_hn_worker'
       get 'delete_all_hn_posts' => 'backfills#delete_all_hn_posts'
+      get 'hn_upload/:id' => 'backfills#hn_upload'
     end
   end
 
