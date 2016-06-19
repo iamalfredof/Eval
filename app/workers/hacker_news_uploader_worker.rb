@@ -8,9 +8,9 @@ class HackerNewsUploaderWorker
   sidekiq_options :queue => :default
 
   def perform(hn_id)
-    folder_path = Time.now.to_s + '-HN-' + SecureRandom.hex
+    folder_path = 'HN-' + SecureRandom.hex
     post = HackerNewsPost.where(:hn_id => hn_id).first
-    file_path = folder_path + "/" + post.title
+    file_path = post.title
 
     # Create dir
     FileUtils.mkdir folder_path
@@ -22,18 +22,17 @@ class HackerNewsUploaderWorker
     end
 
     # Move file to dir
-    # %x( cp #{file_path} #{folder_path}/#{file_path} )
-    # unless $?.exitstatus == 0
-    #   Rails.logger.error "Failed at copying file to folder. Command: cp #{file_path} #{folder_path}/#{file_path}"
-    #   return false
-    # end
+    %x( cp #{file_path} #{folder_path}/#{file_path} )
+    unless $?.exitstatus == 0
+      Rails.logger.error "Failed at copying file to folder. Command: cp #{file_path} #{folder_path}/#{file_path}"
+      return false
+    end
 
     # Upload Folder and File inside
     uploader = S3FolderUpload.new(folder_path)
     uploader.upload!(2, 'uploads/book/raw/')
 
     # Clean files
-    File.delete( file_path )
     FileUtils.rm_rf( folder )
 
     # Send request to udocz
