@@ -27,6 +27,7 @@ Rails.application.routes.draw do
       resources :backfills, only: [:index]
       get 'clean_data' => 'backfills#clean_data'
       get 'init_hn_worker' => 'backfills#init_hn_worker'
+      get 'delete_all_hn_posts' => 'backfills#delete_all_hn_posts'
     end
   end
 
