@@ -10,11 +10,11 @@ class HackerNewsUploaderWorker
   def perform(hn_id)
     folder_path = Time.now.to_s + '-HN-' + SecureRandom.hex
     post = HackerNewsPost.where(:hn_id => hn_id).first
-    file_path = hn_id.to_s
+    file_path = post.title
 
     # Download File
     open(file_path, 'wb') do |file|
-      file_path << open(post.url).read
+      file << open(post.url).read
     end
 
     # Create dir
