@@ -20,6 +20,6 @@
 # Learn more: http://github.com/javan/whenever
 
 # every :hour do
-every :day, :at => '11:35pm' do
+every :day, :at => '12:42am' do
 	runner "HackerNewsPost.search_hacker_news"
 end
