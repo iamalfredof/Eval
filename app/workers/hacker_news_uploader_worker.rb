@@ -14,7 +14,7 @@ class HackerNewsUploaderWorker
 
     # Download File
     open(file_path, 'wb') do |file|
-      file << open(post.url).read
+      file_path << open(post.url).read
     end
 
     # Create dir
