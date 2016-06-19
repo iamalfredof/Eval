@@ -45,7 +45,8 @@ class HackerNewsUploaderWorker
                   "title" => post.title,
                   "filesize" => "0",
                   "doc_type" => "application/pdf",
-                  "unique_id" => hn_id.to_s
+                  "unique_id" => hn_id.to_s,
+                  "secret" => "64zNYufgM8dL1x506FY092uKbms23tT7"
                 }.to_json
               )
 
