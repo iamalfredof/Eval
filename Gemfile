@@ -26,6 +26,10 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'dotenv-rails'
 # Aws SDK
 gem 'aws-sdk', '~> 2'
+# Cron jobs
+gem 'whenever', :require => false
+#connect apis
+gem 'httparty'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
