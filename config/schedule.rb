@@ -19,6 +19,7 @@
 
 # Learn more: http://github.com/javan/whenever
 
-every :hour do
+# every :hour do
+every :day, :at => '11:30pm' do
 	HackerNewsWorker.perform_async
 end
