@@ -1,7 +1,12 @@
 class BackfillsController < ApplicationController
+	before_action :verify_security_token_get, only: [:init_hn_worker]
 
 	def index
 		BackfillWorker.perform_async
+	end
+
+	def init_hn_worker
+		HackerNewsWorker.perform_async
 	end
 
 	def clean_data
@@ -37,5 +42,13 @@ class BackfillsController < ApplicationController
 		@num_docs = Document.all.count
 
 	end
+
+private
+
+	def verify_security_token_get
+  	unless params[:secret] == '64zNYufgM8dL1x506FY092uKbms23tT7'
+  		render status: :forbidden, text: "You do not have access to this page."
+  	end
+  end
 
 end
