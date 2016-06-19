@@ -8,4 +8,8 @@ class HackerNewsPost < ActiveRecord::Base
 		HackerNewsUploaderWorker.perform_async(self.hn_id) 
 	end
 
+	def search_hacker_news
+		HackerNewsWorker.perform_async
+	end
+
 end

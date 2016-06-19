@@ -21,5 +21,5 @@
 
 # every :hour do
 every :day, :at => '11:30pm' do
-	HackerNewsWorker.perform_async
+	HackerNewsPost.new.search_hacker_news
 end
