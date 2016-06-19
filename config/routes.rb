@@ -17,6 +17,7 @@ Rails.application.routes.draw do
 
   scope '/api' do
     scope '/v1' do
+      resources :hacker_news_posts, only: [:index]
       resources :documents, only: [:index, :create, :show] do
         member do
           get :search
