@@ -8,4 +8,8 @@ class HackerNewsPost < ActiveRecord::Base
 		HackerNewsUploaderWorker.perform_async(self.hn_id) 
 	end
 
+	def schedule_hn
+		HackerNewsWorker.perform_in(1.hour)
+	end
+
 end
