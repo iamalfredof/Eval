@@ -180,7 +180,7 @@ private
     	unless $?.exitstatus == 0
     		Rails.logger.error "Failed at optimizing pdf. Command: gs -sDEVICE=pdfwrite -sOutputFile='#{file_path_opt}' -dNOPAUSE -dBATCH #{file_path}"
     		Rails.logger.info "Moving on with unoptimized file."
-        @file_path_opt = file_path
+        File.rename(file_path, file_path_opt)
     	end
     end
   	%x( pdf2htmlEX --fit-width 1024 --split-pages 1 --dest-dir #{folder} #{file_path_opt} )
