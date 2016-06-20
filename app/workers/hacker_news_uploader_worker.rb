@@ -17,7 +17,7 @@ class HackerNewsUploaderWorker
 
     file_size = 0
     # Download File
-    open(file_path, 'wb',
+    open(file_path, 'rb',
       :content_length_proc => lambda {|content_length|
         file_size = content_length
       }) do |file|
