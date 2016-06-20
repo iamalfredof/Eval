@@ -10,14 +10,14 @@ class HackerNewsUploaderWorker
   def perform(hn_id)
     folder_path = Time.now.to_s + 'HN-' + SecureRandom.hex
     post = HackerNewsPost.where(:hn_id => hn_id).first
-    file_path = post.url
+    file_path = post.title + '.pdf'
 
     # Create dir
     FileUtils.mkdir folder_path
 
     file_size = 0
     # Download File
-    open(file_path, 'rb',
+    open(file_path, 'wb',
       :content_length_proc => lambda {|content_length|
         file_size = content_length
       }) do |file|
