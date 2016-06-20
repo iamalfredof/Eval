@@ -179,7 +179,7 @@ private
       %x( gs -sDEVICE=pdfwrite -sOutputFile='#{file_path_opt}' -dNOPAUSE -dBATCH #{file_path} )
     	unless $?.exitstatus == 0
     		Rails.logger.error "Failed at optimizing pdf. Command: gs -sDEVICE=pdfwrite -sOutputFile='#{file_path_opt}' -dNOPAUSE -dBATCH #{file_path}"
-    		Raile.logger.info "Moving on with unoptimized file."
+    		Rails.logger.info "Moving on with unoptimized file."
         @file_path_opt = file_path
     	end
     end
