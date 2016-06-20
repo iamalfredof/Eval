@@ -8,9 +8,9 @@ class HackerNewsUploaderWorker
   sidekiq_options :queue => :default
 
   def perform(hn_id)
-    folder_path = Time.now.to_s + 'HN-' + SecureRandom.hex
+    folder_path = 'HN-' + SecureRandom.hex
     post = HackerNewsPost.where(:hn_id => hn_id).first
-    file_path = post.title + '.pdf'
+    file_path = post.title.gsub('.','-').gsub('/','-').gsub(' ','-').gsub(',','-').gsub(':','-') + '.pdf'
 
     # Create dir
     FileUtils.mkdir folder_path
