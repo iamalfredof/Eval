@@ -15,10 +15,13 @@ class HackerNewsUploaderWorker
     # Create dir
     FileUtils.mkdir folder_path
 
-
+    file_size = 0
     # Download File
-    open(file_path, 'wb') do |file|
-      file << open(post.url).read
+    open(file_path, 'wb',
+      :content_length_proc => lambda {|content_length|
+        file_size = content_length
+      }) do |file|
+        file << open(post.url).read
     end
 
     # Move file to dir
@@ -43,9 +46,10 @@ class HackerNewsUploaderWorker
                   "user_id" => 149,
                   "original_document_url" => "https://ubooks.s3.amazonaws.com/uploads/book/raw/" + folder_path + "/" + file_path,
                   "title" => post.title,
-                  "filesize" => "0",
+                  "filesize" => file_size,
                   "doc_type" => "application/pdf",
                   "unique_id" => hn_id.to_s,
+                  "category_id" => 5, # Technology Category
                   "secret" => "64zNYufgM8dL1x506FY092uKbms23tT7"
                 }
               )
