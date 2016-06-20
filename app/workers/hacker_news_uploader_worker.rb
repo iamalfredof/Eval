@@ -10,7 +10,7 @@ class HackerNewsUploaderWorker
   def perform(hn_id)
     folder_path = Time.now.to_s + 'HN-' + SecureRandom.hex
     post = HackerNewsPost.where(:hn_id => hn_id).first
-    file_path = post.title
+    file_path = post.url
 
     # Create dir
     FileUtils.mkdir folder_path
