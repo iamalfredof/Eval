@@ -44,7 +44,7 @@ class HackerNewsUploaderWorker
     response = HTTParty.post('https://www.udocz.com/api/v1/create_document',
                 :body => {
                   "user_id" => 149,
-                  "original_document_url" => "https://ubooks.s3.amazonaws.com%2Fuploads%2Fbook%2Fraw%2F" + folder_path + "%2F" + file_path,
+                  "original_document_url" => "https://ubooks.s3.amazonaws.com/uploads%2Fbook%2Fraw%2F" + folder_path + "%2F" + file_path,
                   "title" => post.title,
                   "filesize" => file_size,
                   "doc_type" => "application/pdf",
