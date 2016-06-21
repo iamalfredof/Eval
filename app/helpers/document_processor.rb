@@ -242,7 +242,11 @@ private
         file_to_delete = folder + '/' + i.to_s + '_out.pgm'
         File.delete( file_to_delete )
       else
-        %x( pdftotext -f #{i} -l #{i} #{file_path} '#{folder}/#{i}_#{file_path_txt}' )
+        if non_optimized
+          %x( pdftotext -f #{i} -l #{i} #{file_path_opt} '#{folder}/#{i}_#{file_path_txt}' )
+        else
+          %x( pdftotext -f #{i} -l #{i} #{file_path} '#{folder}/#{i}_#{file_path_txt}' )
+        end
         unless $?.exitstatus == 0
           Rails.logger.error "Failed at processing plain text. Command: pdftotext #{file_path} '#{folder}/#{file_path_txt}'"
           return false
