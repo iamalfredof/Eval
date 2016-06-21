@@ -4,7 +4,7 @@ require 'fileutils'
 
 class DocumentProcessor
   attr_reader :url, :file_path_opt, :file_path_txt, :root_folder, :folder, :document_id, :html_url
-  attr_accessor :file_path, :office_flag
+  attr_accessor :file_path, :office_flag, :non_optimized
   # attr_accessor :files
 
   # Initialize the processor class
@@ -25,6 +25,7 @@ class DocumentProcessor
     @document_id 			= document_id.to_s
     @html_url					= "http://#{ENV['S3_BUCKET']}.s3-website-#{ENV['AWS_REGION']}.amazonaws.com/#{@root_folder}/#{@folder}/#{@document_id}_opt.html"
     @office_flag      = false
+    @non_optimized    = false
   end
 
 	# public: Runs the whole routine
@@ -39,7 +40,7 @@ class DocumentProcessor
   		Rails.logger.error 'Download subroutine failed'
   		return false
   	end
-  	unless process!
+  	unless process!(non_optimized)
   		Rails.logger.error 'Process subroutine failed'
   		return false
   	end
@@ -51,7 +52,7 @@ class DocumentProcessor
   		Rails.logger.error 'Upload subroutine failed'
   		return false
   	end
-  	unless clean_up!
+  	unless clean_up!(non_optimized)
   		Rails.logger.error 'Clean up subroutine failed'
   		return false
   	end
@@ -174,13 +175,15 @@ private
 
     # By pass the optimization feature upon special request
     if non_optimized
-      @file_path_opt = file_path
+      # @file_path_opt = file_path
+      File.rename(file_path, file_path_opt)
     else
       %x( gs -sDEVICE=pdfwrite -sOutputFile='#{file_path_opt}' -dNOPAUSE -dBATCH #{file_path} )
     	unless $?.exitstatus == 0
     		Rails.logger.error "Failed at optimizing pdf. Command: gs -sDEVICE=pdfwrite -sOutputFile='#{file_path_opt}' -dNOPAUSE -dBATCH #{file_path}"
     		Rails.logger.info "Moving on with unoptimized file."
         File.rename(file_path, file_path_opt)
+        @non_optimized = true
     	end
     end
   	%x( pdf2htmlEX --fit-width 1024 --split-pages 1 --dest-dir #{folder} #{file_path_opt} )
@@ -319,9 +322,9 @@ private
   #
   # Returns true when finished uploading
   def clean_up!(non_optimized = false)
-    File.delete( file_path )
+    File.delete( file_path_opt )
     unless non_optimized
-      File.delete( file_path_opt )
+      File.delete( file_path )
     end
     FileUtils.rm_rf( folder )
     Rails.logger.info 'Cleaned up'
