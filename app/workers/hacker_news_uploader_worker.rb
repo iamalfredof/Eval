@@ -11,6 +11,10 @@ class HackerNewsUploaderWorker
     folder_path = 'HN-' + SecureRandom.hex
     post = HackerNewsPost.where(:hn_id => hn_id).first
     file_path = post.title.gsub(/[^0-9A-Za-z.\-]/, '_') + '.pdf'
+    url = post.url
+    if url.include? 'github.com'
+      url = url.gsub('blob','raw')
+    end
 
     # Create dir
     FileUtils.mkdir folder_path
@@ -21,7 +25,7 @@ class HackerNewsUploaderWorker
       :content_length_proc => lambda {|content_length|
         file_size = content_length
       }) do |file|
-        file << open(post.url).read
+        file << open(url).read
     end
 
     # Move file to dir
