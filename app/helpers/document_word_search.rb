@@ -33,12 +33,12 @@ class DocumentWordSearch
 		# Read file and build data
 		lines = IO.readlines( cache_route + '/' + filename )
 		for line in lines
+			if line["<page-break>"]
+	        current_page += line.scan(/<page-break>/).count
+	    end
 			if line.downcase.include? query.downcase
 				data << { "p" => current_page, "t" => line  }
 			end
-	    if line["<page-break>"]
-	        current_page += line.scan(/<page-break>/).count
-	    end
 		end
 
 		return data
