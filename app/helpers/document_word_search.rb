@@ -37,7 +37,7 @@ class DocumentWordSearch
 				data << { "p" => current_page, "t" => line  }
 			end
 	    if line["<page-break>"]
-	        current_page += 1
+	        current_page += line.scan(/<page-break>/).count
 	    end
 		end
 
