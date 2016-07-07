@@ -1,5 +1,6 @@
 class BackfillsController < ApplicationController
-	before_action :verify_security_token_get, only: [:init_hn_worker, :delete_all_hn_posts, :hn_upload]
+	before_action :verify_security_token_get, only: [:init_hn_worker, :delete_all_hn_posts, :hn_upload,
+																									 :init_pq_worker, :pq_upload]
 
 	def index
 		BackfillWorker.perform_async
@@ -9,8 +10,20 @@ class BackfillsController < ApplicationController
 		HackerNewsWorker.perform_async
 	end
 
+	def init_pq_worker
+		if params[:product].present?
+			PeruQuioscoWorker.perform_async( params[:product] )
+		end
+	end
+
 	def hn_upload
 		HackerNewsPost.find(params[:id]).upload_file
+	end
+
+	def pq_upload
+		if params[:product].present?
+			PeruQuioscoPub.find(params[:id]).upload_file
+		end
 	end
 
 	def delete_all_hn_posts

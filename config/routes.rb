@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   scope '/api' do
     scope '/v1' do
       resources :hacker_news_posts, only: [:index]
+      resources :peru_quiosco_pubs, only: [:index]
       resources :documents, only: [:index, :create, :show] do
         member do
           get :search
@@ -26,10 +27,15 @@ Rails.application.routes.draw do
         end
       end
       resources :backfills, only: [:index]
+      
       get 'clean_data' => 'backfills#clean_data'
-      get 'init_hn_worker' => 'backfills#init_hn_worker'
       get 'delete_all_hn_posts' => 'backfills#delete_all_hn_posts'
+
+      get 'init_hn_worker' => 'backfills#init_hn_worker'
       get 'hn_upload/:id' => 'backfills#hn_upload'
+
+      get 'init_pq_worker' => 'backfills#init_pq_worker'
+      get 'pq_upload/:id' => 'backfills#pq_upload'
     end
   end
 

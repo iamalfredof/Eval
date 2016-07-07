@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160619011904) do
+ActiveRecord::Schema.define(version: 20160706220623) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,14 @@ ActiveRecord::Schema.define(version: 20160619011904) do
     t.integer "hn_id"
     t.string  "title"
     t.string  "url"
+  end
+
+  create_table "peru_quiosco_pubs", force: :cascade do |t|
+    t.integer  "pq_firstpage_id"
+    t.integer  "pub_size"
+    t.string   "title"
+    t.string   "product"
+    t.datetime "pub_time"
   end
 
 end

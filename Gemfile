@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.5.1'
 # Use sqlite3 as the database for Active Record
@@ -50,6 +49,7 @@ gem 'sidekiq'
 gem 'sidekiq-status'
 
 gem 'pdf-reader'
+gem 'combine_pdf'
 
 # Add this if you're using rvm
 gem 'capistrano-rvm', github: "capistrano/rvm"

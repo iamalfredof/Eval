@@ -30,11 +30,6 @@ class HackerNewsUploaderWorker
 
     # Move file to dir
     FileUtils.mv file_path, folder_path
-    # %x( cp #{file_path} #{folder_path}/#{file_path} )
-    # unless $?.exitstatus == 0
-    #   Rails.logger.error "Failed at copying file to folder. Command: cp #{file_path} #{folder_path}/#{file_path}"
-    #   return false
-    # end
 
     # Upload Folder and File inside
     uploader = S3FolderUpload.new(folder_path)

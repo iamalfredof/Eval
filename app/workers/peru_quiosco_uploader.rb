@@ -1,0 +1,87 @@
+require 'uri'
+require 'open-uri'
+require 'fileutils'
+
+class PeruQuioscoUploaderWorker
+  include Sidekiq::Worker
+  include Sidekiq::Status::Worker
+  sidekiq_options :queue => :default
+
+  def perform(pq_id)
+    pq_pub                  = PeruQuioscoPub.find(pq_id)
+    pdf_page_base_url       = "http://pro.visor.peruquiosco.pe/m/setpdfws/"
+    pub                     = JSON.parse( HTTParty.get(latest_pub_url).body )
+    pub_time                = DateTime.strptime(pub['pubtime'].to_s,'%s').strftime("[%d/%m/%Y]")
+    title                   = pq_pub.title
+    product                 = pq_pub.product
+    folder_path             = 'PQ-' + SecureRandom.hex
+    file_path               = pq_pub.title.gsub(/[^0-9A-Za-z.\-]/, '_') + '.pdf'
+    file_size               = 0
+
+    pdf = CombinePDF.new
+    for i in 0..(pq_pub.pub_size - 1)
+      url             = pdf_page_base_url + (pq_pub.pq_firstpage_id + i).to_s
+      page_path       = "page_" + (i+1).to_s + ".pdf"
+
+      # Download Files
+      open(page_path, 'wb') do |file|
+          file << open(url).read
+      end
+
+      # Append PDF
+      pdf << CombinePDF.load( page_path )
+    end
+
+    # Save Appended PDF
+    pdf.save file_path
+
+    # Clean Pages
+    for i in 0..(pq_pub.pub_size - 1)
+      page_path       = "page_" + (i+1).to_s + ".pdf"
+      File.delete( page_path )
+    end
+
+    # Create dir
+    FileUtils.mkdir folder_path
+
+    # Move file to dir
+    FileUtils.mv file_path, folder_path
+
+    # Upload Folder and File inside
+    uploader = S3FolderUpload.new(folder_path)
+    uploader.upload!(2, 'uploads/book/raw/')
+
+    # Clean files
+    File.delete( folder_path + '/' + file_path )
+    FileUtils.rm_rf( folder_path )
+
+    user_id = case product
+    when 'elcomercio'
+      150
+    when 'correo'
+      151
+    when 'peru21'
+      152
+    when 'gestion'
+      153
+    when 'depor'
+      155
+    end
+
+    # Send request to udocz
+    response = HTTParty.post('https://www.udocz.com/api/v1/create_document',
+                :body => {
+                  "user_id" => user_id,
+                  "original_document_url" => "https://ubooks.s3.amazonaws.com/uploads%2Fbook%2Fraw%2F" + folder_path + "%2F" + file_path,
+                  "title" => pq_pub.title,
+                  "filesize" => file_size,
+                  "doc_type" => "application/pdf",
+                  "unique_id" => pq_firstpage_id.to_s,
+                  "category_id" => 13, # News and Politics Category
+                  "secret" => "64zNYufgM8dL1x506FY092uKbms23tT7"
+                }
+              )
+
+  end
+  
+end
