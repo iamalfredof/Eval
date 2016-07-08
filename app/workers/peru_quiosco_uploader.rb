@@ -49,7 +49,7 @@ class PeruQuioscoUploaderWorker
 
     # Clean Pages
     for i in 0..(pq_pub.pub_size - 1)
-      page_path       = "page_" + (i+1).to_s + ".pdf"
+      page_path       = product_tag + "_page_" + (i+1).to_s + ".pdf"
       File.delete( page_path )
     end
 
