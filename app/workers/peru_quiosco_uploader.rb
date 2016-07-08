@@ -21,9 +21,9 @@ class PeruQuioscoUploaderWorker
       "elcomercio"
     when 'Diario Correo' # correo
       "correo"
-    when 'Per\u00fa' # peru21
+    when 'Perú 21' # peru21
       "peru21"
-    when 'Gesti\u00f3n' # gestion
+    when 'Gestión' # gestion
       "gestion"
     when 'Depor' # depor
       "depor"
