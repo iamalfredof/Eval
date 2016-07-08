@@ -10,8 +10,6 @@ class PeruQuioscoUploaderWorker
   def perform(pq_id)
     pq_pub                  = PeruQuioscoPub.find(pq_id)
     pdf_page_base_url       = "http://pro.visor.peruquiosco.pe/m/setpdfws/"
-    pub                     = JSON.parse( HTTParty.get(latest_pub_url).body )
-    pub_time                = DateTime.strptime(pub['pubtime'].to_s,'%s').strftime("[%d/%m/%Y]")
     title                   = pq_pub.title
     product                 = pq_pub.product
     folder_path             = 'PQ-' + SecureRandom.hex
@@ -56,15 +54,15 @@ class PeruQuioscoUploaderWorker
     FileUtils.rm_rf( folder_path )
 
     user_id = case product
-    when 'elcomercio'
+    when 'El Comercio' # elcomercio
       150
-    when 'correo'
+    when 'Diario Correo' # correo
       151
-    when 'peru21'
+    when 'Per\u00fa' # peru21
       152
-    when 'gestion'
+    when 'Gesti\u00f3n' # gestion
       153
-    when 'depor'
+    when 'Depor' # depor
       155
     end
 
