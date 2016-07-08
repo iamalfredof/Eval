@@ -18,12 +18,13 @@ class PeruQuioscoUploaderWorker
 
     pdf = CombinePDF.new
     for i in 0..(pq_pub.pub_size - 1)
-      url             = pdf_page_base_url + (pq_pub.pq_firstpage_id + i).to_s
+      pre_url         = pdf_page_base_url + (pq_pub.pq_firstpage_id + i).to_s
       page_path       = "page_" + (i+1).to_s + ".pdf"
+      pdf_url         = JSON.parse( HTTParty.get(pre_url).body )['url_pdf']
 
       # Download Files
       open(page_path, 'wb') do |file|
-          file << open(url).read
+          file << open(pdf_url).read
       end
 
       # Append PDF
