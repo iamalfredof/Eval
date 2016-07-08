@@ -18,15 +18,15 @@ class PeruQuioscoUploaderWorker
 
     product_tag = case product
     when 'El Comercio' # elcomercio
-      elcomercio
+      "elcomercio"
     when 'Diario Correo' # correo
-      correo
+      "correo"
     when 'Per\u00fa' # peru21
-      peru21
+      "peru21"
     when 'Gesti\u00f3n' # gestion
-      gestion
+      "gestion"
     when 'Depor' # depor
-      depor
+      "depor"
     end
 
     pdf = CombinePDF.new
