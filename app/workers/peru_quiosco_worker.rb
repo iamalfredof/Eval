@@ -20,7 +20,7 @@ class PeruQuioscoWorker
                           :title => title,
                           :pub_time => pub_time,
                           :product => product)
-    Rails.logger.info "Creating: " + title]
+    Rails.logger.info "Creating: " + title
   end
   
 end

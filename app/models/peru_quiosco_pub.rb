@@ -9,7 +9,8 @@ class PeruQuioscoPub < ActiveRecord::Base
 	end
 
 	def schedule_pq(product)
-		PeruQuioscoWorker.perform_in(1.hour, product)
+		# Midnight + 5 minutes in Lima
+		PeruQuioscoWorker.perform_at(Time.new.utc.at_beginning_of_day + 1.day + 5.hours + 5.minutes, product)
 	end
 
 end
