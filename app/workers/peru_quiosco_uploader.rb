@@ -75,7 +75,7 @@ class PeruQuioscoUploaderWorker
                   "title" => pq_pub.title,
                   "filesize" => file_size,
                   "doc_type" => "application/pdf",
-                  "unique_id" => pq_firstpage_id.to_s,
+                  "unique_id" => pq_pub.pq_firstpage_id.to_s,
                   "category_id" => 13, # News and Politics Category
                   "secret" => "64zNYufgM8dL1x506FY092uKbms23tT7"
                 }

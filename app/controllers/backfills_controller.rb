@@ -23,9 +23,7 @@ class BackfillsController < ApplicationController
 	end
 
 	def pq_upload
-		if params[:product].present?
-			PeruQuioscoPub.find(params[:id]).upload_file
-		end
+		PeruQuioscoPub.find(params[:id]).upload_file
 	end
 
 	def delete_all_hn_posts
