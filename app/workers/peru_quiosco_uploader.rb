@@ -16,10 +16,23 @@ class PeruQuioscoUploaderWorker
     file_path               = pq_pub.title.gsub(/[^0-9A-Za-z.\-]/, '_') + '.pdf'
     file_size               = 0
 
+    product_tag = case product
+    when 'El Comercio' # elcomercio
+      elcomercio
+    when 'Diario Correo' # correo
+      correo
+    when 'Per\u00fa' # peru21
+      peru21
+    when 'Gesti\u00f3n' # gestion
+      gestion
+    when 'Depor' # depor
+      depor
+    end
+
     pdf = CombinePDF.new
     for i in 0..(pq_pub.pub_size - 1)
       pre_url         = pdf_page_base_url + (pq_pub.pq_firstpage_id + i).to_s
-      page_path       = "page_" + (i+1).to_s + ".pdf"
+      page_path       = product_tag + "_page_" + (i+1).to_s + ".pdf"
       pdf_url         = JSON.parse( HTTParty.get(pre_url).body )['url_pdf']
 
       # Download Files
