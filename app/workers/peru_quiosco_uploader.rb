@@ -72,9 +72,9 @@ class PeruQuioscoUploaderWorker
       150
     when 'Diario Correo' # correo
       151
-    when 'Per\u00fa' # peru21
+    when 'Perú 21' # peru21
       152
-    when 'Gesti\u00f3n' # gestion
+    when 'Gestión' # gestion
       153
     when 'Depor' # depor
       155
