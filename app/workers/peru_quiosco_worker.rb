@@ -3,8 +3,8 @@ class PeruQuioscoWorker
   include Sidekiq::Status::Worker
   sidekiq_options :queue => :default
 
-  def perform(product)
-    PeruQuioscoPub.new.schedule_pq(product)
+  def perform(product, offset)
+    PeruQuioscoPub.new.schedule_pq(product, offset)
     
     # This URL will always get the latest daily publication
     latest_pub_url          = "http://visor.quioscodigital.pe/servicioauth/ws/" + product + ".json" # elcomercio, gestion, peru21, trome, depor, correo

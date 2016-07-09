@@ -8,9 +8,9 @@ class PeruQuioscoPub < ActiveRecord::Base
 		PeruQuioscoUploaderWorker.perform_async(self.id) 
 	end
 
-	def schedule_pq(product)
+	def schedule_pq(product, offset)
 		# Midnight + 5 minutes in Lima
-		PeruQuioscoWorker.perform_at(Time.new.utc.at_beginning_of_day + 1.day + 5.hours + 5.minutes, product)
+		PeruQuioscoWorker.perform_at(Time.new.utc.at_beginning_of_day + 1.day + 5.hours + 5.minutes + offset.minutes, product, offset)
 	end
 
 end
