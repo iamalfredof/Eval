@@ -4,8 +4,6 @@ class PeruQuioscoWorker
   sidekiq_options :queue => :default
 
   def perform(product, offset)
-    PeruQuioscoPub.new.schedule_pq(product, offset)
-    
     # This URL will always get the latest daily publication
     latest_pub_url          = "http://visor.quioscodigital.pe/servicioauth/ws/" + product + ".json" # elcomercio, gestion, peru21, trome, depor, correo
     pub                     = JSON.parse( HTTParty.get(latest_pub_url).body )
@@ -21,6 +19,8 @@ class PeruQuioscoWorker
                           :pub_time => pub_time,
                           :product => product)
     Rails.logger.info "Creating: " + title
+
+    PeruQuioscoPub.new.schedule_pq(product, offset)
   end
   
 end
