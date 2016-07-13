@@ -11,12 +11,12 @@ class PeruQuioscoUploaderWorker
     pq_pub                  = PeruQuioscoPub.find(pq_id)
     pdf_page_base_url       = "http://pro.visor.peruquiosco.pe/m/setpdfws/"
     title                   = pq_pub.title
-    product                 = pq_pub.product
+    pub_product             = pq_pub.product
     folder_path             = 'PQ-' + SecureRandom.hex
     file_path               = pq_pub.title.gsub(/[^0-9A-Za-z.\-]/, '_') + '.pdf'
     file_size               = 0
 
-    product_tag = case product
+    product_tag = case pub_product
     when 'El Comercio' # elcomercio
       "elcomercio"
     when 'Diario Correo' # correo
@@ -67,7 +67,7 @@ class PeruQuioscoUploaderWorker
     File.delete( folder_path + '/' + file_path )
     FileUtils.rm_rf( folder_path )
 
-    user_id = case product
+    user_id = case pub_product
     when 'El Comercio' # elcomercio
       150
     when 'Diario Correo' # correo
