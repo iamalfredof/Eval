@@ -8,7 +8,7 @@ class ForosPeruPost < ActiveRecord::Base
 	end
 
 	def schedule_fp(keyword)
-		ForosPeruWorker.perform_in(12.hours, keyword)
+		ForosPeruWorker.perform_in(1.hour, keyword)
 	end
 
 end
