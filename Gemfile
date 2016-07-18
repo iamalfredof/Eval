@@ -27,6 +27,10 @@ gem 'dotenv-rails'
 gem 'aws-sdk', '~> 2'
 #connect apis
 gem 'httparty'
+# Push Notifications for my phone
+gem 'pushover'
+# HTML parsing
+gem 'nokogiri'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

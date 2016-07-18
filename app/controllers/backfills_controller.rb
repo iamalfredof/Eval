@@ -1,9 +1,18 @@
 class BackfillsController < ApplicationController
 	before_action :verify_security_token_get, only: [:init_hn_worker, :delete_all_hn_posts, :hn_upload,
-																									 :init_pq_worker, :pq_upload]
+																									 :init_pq_worker, :pq_upload,
+																									 :init_fp_worker]
 
 	def index
 		BackfillWorker.perform_async
+	end
+
+	def init_fp_worker
+		ForosPeruWorker.perform_async('PDF')
+		ForosPeruWorker.perform_in(2.seconds, 'Scribd')
+		ForosPeruWorker.perform_in(4.seconds,'Slideshare')
+		ForosPeruWorker.perform_in(6.seconds,'Apuntes')
+		ForosPeruWorker.perform_in(8.seconds,'Libros')
 	end
 
 	def init_hn_worker

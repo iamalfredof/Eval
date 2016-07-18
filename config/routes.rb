@@ -19,6 +19,7 @@ Rails.application.routes.draw do
     scope '/v1' do
       resources :hacker_news_posts, only: [:index]
       resources :peru_quiosco_pubs, only: [:index]
+      resources :foros_peru_posts, only: [:index]
       resources :documents, only: [:index, :create, :show] do
         member do
           get :search
@@ -36,6 +37,8 @@ Rails.application.routes.draw do
 
       get 'init_pq_worker' => 'backfills#init_pq_worker'
       get 'pq_upload/:id' => 'backfills#pq_upload'
+
+      get 'init_fp_worker' => 'backfills#init_fp_worker'
     end
   end
 
