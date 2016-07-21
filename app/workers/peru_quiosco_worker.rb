@@ -10,8 +10,8 @@ class PeruQuioscoWorker
     pub_pages               = pub['pages']
     pq_firstpage_id         = Integer( pub_pages[0]['id'] )
     pub_time                = Time.at( pub['pubtime'] ).to_s(:db)
-    pub_product                 = pub['name']
-    title                   = product + " " + DateTime.strptime(pub['pubtime'].to_s,'%s').strftime("[%d/%m/%Y]")
+    pub_product             = pub['name']
+    title                   = pub_product + " " + DateTime.strptime(pub['pubtime'].to_s,'%s').strftime("[%d/%m/%Y]")
 
     PeruQuioscoPub.create(:pq_firstpage_id => pq_firstpage_id,
                           :pub_size => pub_pages.size,
