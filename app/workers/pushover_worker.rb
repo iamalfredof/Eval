@@ -8,7 +8,6 @@ class PushoverWorker
     Pushover.notification(
     	title: title,
       message: message,
-      device: 'iPhone',
       user: 'u4ignr2qcqsxray22nxjj792qfgras',
       token: 'a34roc2qfzdtzkm242g13wh5tc7ua9'
     )
