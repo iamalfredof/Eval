@@ -8,11 +8,11 @@ class BackfillsController < ApplicationController
 	end
 
 	def init_fp_worker
-		ForosPeruWorker.perform_async('PDF')
-		ForosPeruWorker.perform_in(2.seconds, 'Scribd')
-		ForosPeruWorker.perform_in(4.seconds,'Slideshare')
-		ForosPeruWorker.perform_in(6.seconds,'Apuntes')
-		ForosPeruWorker.perform_in(8.seconds,'Libros')
+		ForosPeruWorker.perform_async('*pdf*')
+		ForosPeruWorker.perform_in(2.seconds, '*scribd*')
+		ForosPeruWorker.perform_in(4.seconds,'*slideshare*')
+		ForosPeruWorker.perform_in(6.seconds,'apuntes')
+		ForosPeruWorker.perform_in(8.seconds,'libros')
 	end
 
 	def init_hn_worker
