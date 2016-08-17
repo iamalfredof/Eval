@@ -30,6 +30,8 @@ Rails.application.routes.draw do
       end
       resources :backfills, only: [:index]
 
+      get 'backfill_all_mobile_pages' => 'backfills#backfill_all_mobile_pages'
+
       get 'clean_data' => 'backfills#clean_data'
       get 'delete_all_hn_posts' => 'backfills#delete_all_hn_posts'
 

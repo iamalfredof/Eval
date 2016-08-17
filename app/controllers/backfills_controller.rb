@@ -1,7 +1,8 @@
 class BackfillsController < ApplicationController
 	before_action :verify_security_token_get, only: [:init_hn_worker, :delete_all_hn_posts, :hn_upload,
 																									 :init_pq_worker, :pq_upload,
-																									 :init_fp_worker
+																									 :init_fp_worker,
+																									 :backfill_all_mobile_pages
 																									]
 
 	def index
@@ -14,6 +15,10 @@ class BackfillsController < ApplicationController
 		ForosPeruWorker.perform_in(4.seconds,'*slideshare*')
 		ForosPeruWorker.perform_in(6.seconds,'apuntes')
 		ForosPeruWorker.perform_in(8.seconds,'libros')
+	end
+
+	def backfill_all_mobile_pages
+		BackfillAllMobilePagesWorker.perform_async
 	end
 
 	def init_hn_worker
