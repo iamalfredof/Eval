@@ -104,22 +104,13 @@ private
 
     threads.each { |t| t.join }
 
-    Rails.logger.info(
-          'Processed id-' + document_id + ' mobile pages: ' 
-          + pages_processed.to_s 
-          + '/'
-          + page_count.to_s
-          )
+    Rails.logger.info( 'Processed id-' + document_id + ' mobile pages: ' + pages_processed.to_s + '/' + page_count.to_s )
   end
 
   def fetch_page!(page_number)
     Magick::Image.read( file_path + '[' + page_number.to_s + ']' )
     .first
-    .write( folder + '/'
-          + base_page_path 
-          + ( page_number + 1 ).to_s 
-          + '.png'
-          )
+    .write( folder + '/' + base_page_path + ( page_number + 1 ).to_s + '.png' )
   end
 
   # private: Download pdf in location
