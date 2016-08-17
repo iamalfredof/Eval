@@ -25,10 +25,11 @@ Rails.application.routes.draw do
           get :search
           get :ocr
           get :pno
+          get :process_mobile_pages
         end
       end
       resources :backfills, only: [:index]
-      
+
       get 'clean_data' => 'backfills#clean_data'
       get 'delete_all_hn_posts' => 'backfills#delete_all_hn_posts'
 

@@ -1,7 +1,8 @@
 class BackfillsController < ApplicationController
 	before_action :verify_security_token_get, only: [:init_hn_worker, :delete_all_hn_posts, :hn_upload,
 																									 :init_pq_worker, :pq_upload,
-																									 :init_fp_worker]
+																									 :init_fp_worker
+																									]
 
 	def index
 		BackfillWorker.perform_async

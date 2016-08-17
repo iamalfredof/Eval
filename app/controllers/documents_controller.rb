@@ -1,6 +1,9 @@
 class DocumentsController < ApplicationController
-  before_action :verify_security_token, only: [:create]
-  before_action :verify_security_token_get, only: [:ocr, :pno]
+  before_action :verify_security_token,
+  	only: [:create]
+
+  before_action :verify_security_token_get,
+  	only: [:ocr, :pno, :process_mobile_pages]
 
 	# GET /documents.json
 	def index
@@ -21,6 +24,11 @@ class DocumentsController < ApplicationController
         format.json { render json: @document.errors, status: :unprocessable_entity }
       end
     end
+	end
+
+	def process_mobile_pages
+		ProcessMobilePagesWorker.perform_async(params[:id])
+		render json: {status: '200', processing_mobile_pages: 'Is a go'}.to_json
 	end
 
 	# GET /documents/1.json
