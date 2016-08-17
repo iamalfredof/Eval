@@ -3,8 +3,8 @@ require 'open-uri'
 require 'fileutils'
 
 class DocumentProcessorMobile
-  attr_reader :url, :root_folder, :folder, :document_id, :html_url, :base_page_path, :thread_count, :page_count
-  attr_accessor :file_path, :pages
+  attr_reader :url, :root_folder, :folder, :document_id, :html_url, :base_page_path, :thread_count
+  attr_accessor :file_path
   # attr_accessor :files
 
   # Initialize the processor class
@@ -23,8 +23,6 @@ class DocumentProcessorMobile
     @root_folder			= 'documents_html'
     @document_id 			= document_id.to_s
     @base_page_path   = document_id.to_s + '_mobile_page_'
-    @pages            = PDF::Reader.new(@file_path).pages.to_ary
-    @page_count       = PDF::Reader.new(@file_path).page_count
     @html_url					= "http://#{ENV['S3_BUCKET']}.s3-website-#{ENV['AWS_REGION']}.amazonaws.com/#{@root_folder}/#{@folder}/#{@document_id}_opt.html"
   end
 
@@ -84,6 +82,9 @@ private
     unless $?.exitstatus == 0
       Rails.logger.error "Failed at making directory."
     end
+
+    pages             = PDF::Reader.new(file_path).pages.to_ary
+    page_count        = PDF::Reader.new(file_path).page_count
 
     pages_processed   = 0
     mutex             = Mutex.new
