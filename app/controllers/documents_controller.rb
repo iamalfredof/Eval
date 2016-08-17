@@ -27,7 +27,7 @@ class DocumentsController < ApplicationController
 	end
 
 	def process_mobile_pages
-		ProcessMobilePagesWorker.perform_async(params[:id])
+		ProcessMobilePagesWorker.perform_async(@document.foreign_document_url, @document.foreign_document_id, @document.html_url.split('/')[4].split('-')[1])
 		render json: {status: '200', processing_mobile_pages: 'Is a go'}.to_json
 	end
 
