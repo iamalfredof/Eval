@@ -2,20 +2,15 @@ class BackfillAllMobilePagesWorker
   include Sidekiq::Worker
   include Sidekiq::Status::Worker
 
-  def perform(batch)
-		documents = Document.where(:backfilled => false).order('random()').limit(batch)
-		offset = 0
+  def perform
+  	next_doc = Document.where(:backfilled => false).first
 
-		Rails.logger.info( 'Documents Pending: ' + (documents.size.to_s) + '/' + Document.all.count.to_s )
-
-		documents.each do |d|
-			ProcessMobilePagesWorker.perform_async(
-					d.foreign_document_url,
-					d.foreign_document_id,
-					d.html_url.split('/')[4].split('-')[1]
+  	ProcessMobilePagesWorker.perform_in(
+					2.seconds
+					next_doc.foreign_document_url,
+					next_doc.foreign_document_id,
+					next_doc.html_url.split('/')[4].split('-')[1]
 				)
-		end
-
   end
 
 end
