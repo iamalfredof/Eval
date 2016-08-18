@@ -87,7 +87,7 @@ private
     unless $?.exitstatus == 0
       Rails.logger.error "Failed at fix pdf. Command: gs -o #{file_path_opt} -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress #{file_path}"
     end
-    
+
     File.delete( file_path )
     @file_path = file_path_opt
   end
@@ -109,24 +109,32 @@ private
     page_count        = PDF::Reader.new(file_path).page_count
 
     pages_processed   = 0
-    mutex             = Mutex.new
-    threads           = []
+    # mutex             = Mutex.new
+    # threads           = []
 
-    thread_count.times do |i|
-      threads[i] = Thread.new {
-        until pages.empty?
-          mutex.synchronize do
-            pages_processed += 1
-          end
-          page = pages.pop rescue nil
-          next unless page
+    # thread_count.times do |i|
+    #   threads[i] = Thread.new {
+    #     until pages.empty?
+    #       mutex.synchronize do
+    #         pages_processed += 1
+    #       end
+    #       page = pages.pop rescue nil
+    #       next unless page
 
-          fetch_page!(page.number)
-        end
-      }
+    #       fetch_page!(page.number)
+    #     end
+    #   }
+    # end
+
+    # threads.each { |t| t.join }
+
+    until pages.empty?
+      pages_processed += 1
+      page = pages.pop rescue nil
+      next unless page
+
+      fetch_page!(page.number)
     end
-
-    threads.each { |t| t.join }
 
     Rails.logger.info( 'Processed id-' + document_id + ' mobile pages: ' + pages_processed.to_s + '/' + page_count.to_s )
     return true
