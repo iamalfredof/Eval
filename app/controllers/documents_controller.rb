@@ -10,6 +10,11 @@ class DocumentsController < ApplicationController
 		@documents = Document.all
 	end
 
+	def backfilled
+		@pending_count = Document.where(:backfilled => false).count
+		@total_count = Document.all.count
+	end
+
 	# POST /documents.json
 	def create
 		respond_to do |format|

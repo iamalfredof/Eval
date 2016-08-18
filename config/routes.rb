@@ -27,6 +27,9 @@ Rails.application.routes.draw do
           get :pno
           get :process_mobile_pages
         end
+        collection do
+          get :backfilled
+        end
       end
       resources :backfills, only: [:index]
 
