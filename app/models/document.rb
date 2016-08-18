@@ -4,7 +4,7 @@ class Document < ActiveRecord::Base
 
 	def queue_next_pending_backfill
 		
-		next_doc = Document.where(:backfilled => false).first
+		next_doc = Document.where(:backfilled => false, :failed_processing => false).first
 
 		ProcessMobilePagesWorker.perform_in(
 					2.seconds,

@@ -136,11 +136,16 @@ private
     rescue PDF::Reader::MalformedPDFError => e
       Rails.logger.error e.to_s
       clean_up!
+      Document.find(document_id).update_attribute(:failed_processing, true)
       return false
     end
 
     for i in 1..page_count
       fetch_page!(i)
+    end
+
+    if pages_processed < page_count
+      Document.find(document_id).update_attribute(:failed_processing, true)
     end
 
     Rails.logger.info( 'Processed id-' + document_id + ' mobile pages: ' + pages_processed.to_s + '/' + page_count.to_s )
