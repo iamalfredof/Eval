@@ -129,8 +129,8 @@ private
 
     # threads.each { |t| t.join }
 
-    pages             = PDF::Reader.new(file_path).page_count
-    for i in 1..pages
+    page_count             = PDF::Reader.new(file_path).page_count
+    for i in 1..page_count
       fetch_page!(i)
     end
 
