@@ -135,6 +135,7 @@ private
       page_count             = PDF::Reader.new( './' + file_path ).page_count
     rescue PDF::Reader::MalformedPDFError => e
       Rails.logger.error e.to_s
+      clean_up!
       return false
     end
 
@@ -193,7 +194,7 @@ private
   #     true
   #
   # Returns true when finished uploading
-  def clean_up!(non_optimized = false)
+  def clean_up!
     File.delete( file_path )
     FileUtils.rm_rf( folder )
     Rails.logger.info 'Cleaned up'
