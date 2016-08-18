@@ -106,7 +106,7 @@ private
     end
 
     pages             = PDF::Reader.new(file_path).pages.to_ary
-    page_count        = PDF::Reader.new(file_path).page_count
+    page_count        = pages.size
 
     pages_processed   = 0
     # mutex             = Mutex.new
@@ -141,9 +141,13 @@ private
   end
 
   def fetch_page!(page_number)
-    Magick::Image.read( file_path + '[' + (page_number - 1).to_s + ']' )
-    .first
-    .write( folder + '/' + base_page_path + page_number.to_s + '.png' )
+    begin
+      Magick::Image.read( file_path + '[' + (page_number - 1).to_s + ']' )
+      .first
+      .write( folder + '/' + base_page_path + page_number.to_s + '.png' )
+    rescue Magick::ImageMagickError => e
+      Rails.logger.error e.to_s
+    end
   end
 
   # private: Download pdf in location
