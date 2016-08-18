@@ -6,7 +6,7 @@ class BackfillAllMobilePagesWorker
 		documents = Document.where(:backfilled => false).order('random()')
 		offset = 0
 
-		Rails.logger.info( 'Documents Pending: ' + (documents.size.count) + '/' + Document.all.count.to_s )
+		Rails.logger.info( 'Documents Pending: ' + (documents.size.to_s) + '/' + Document.all.count.to_s )
 
 		documents.each do |d|
 			random_hex = d.html_url.split('/')[4].split('-').last
