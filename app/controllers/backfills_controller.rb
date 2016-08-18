@@ -18,7 +18,11 @@ class BackfillsController < ApplicationController
 	end
 
 	def backfill_all_mobile_pages
-		BackfillAllMobilePagesWorker.perform_async
+		if params[:batch].present?
+			BackfillAllMobilePagesWorker.perform_async(params[:batch])
+		else
+			render status: :forbidden, text: "You do not have the right parameters to access this page."
+		end
 	end
 
 	def init_hn_worker

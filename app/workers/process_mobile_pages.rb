@@ -7,9 +7,11 @@ class ProcessMobilePagesWorker
 						foreign_document_url,
 						foreign_document_id,
 						random_hex, 
-						50
+						5
 					)
-		dpm.start_routine
+		Document.where(:foreign_document_id => foreign_document_id)
+			.first
+			.update_attribute(:backfilled, dpm.start_routine)
   end
 
 end
