@@ -12,6 +12,8 @@ class ProcessMobilePagesWorker
 		Document.where(:foreign_document_id => foreign_document_id)
 			.first
 			.update_attribute(:backfilled, dpm.start_routine)
+
+		Document.new.queue_next_pending_backfill
   end
 
 end

@@ -1,9 +1,6 @@
 class Document < ActiveRecord::Base
 
-	after_save :queue_next_pending_backfill
-
 	def queue_next_pending_backfill
-		
 		next_doc = Document.where(:backfilled => false, :failed_processing => false).first
 
 		ProcessMobilePagesWorker.perform_in(
@@ -12,7 +9,6 @@ class Document < ActiveRecord::Base
 					next_doc.foreign_document_id,
 					next_doc.html_url.split('/')[4].split('-')[1]
 				)
-
 	end
 
 end
