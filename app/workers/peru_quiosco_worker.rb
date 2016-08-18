@@ -18,7 +18,6 @@ class PeruQuioscoWorker
                           :title => title,
                           :pub_time => pub_time,
                           :product => pub_product)
-    Rails.logger.info "Creating: " + title
 
     PeruQuioscoPub.new.schedule_pq(product, offset)
   end

@@ -3,7 +3,7 @@ require 'open-uri'
 require 'fileutils'
 
 class DocumentProcessorMobile
-  attr_reader :url, :root_folder, :folder, :document_id, :html_url, :base_page_path, :thread_count
+  attr_reader :url, :root_folder, :folder, :document_id, :html_url, :base_page_path, :thread_count, :file_path_opt
   attr_accessor :file_path
   # attr_accessor :files
 
@@ -19,6 +19,7 @@ class DocumentProcessorMobile
   	@thread_count     = thread_count
     @url 						 	= url
     @file_path       	= URI(url).path.split('/').last
+    @file_path_opt    = document_id.to_s + '_opt.pdf'
     @folder           = document_id.to_s + '-' + random_hex
     @root_folder			= 'documents_html'
     @document_id 			= document_id.to_s
@@ -38,6 +39,10 @@ class DocumentProcessorMobile
   		Rails.logger.error 'Download subroutine failed'
   		return false
   	end
+    unless fix_pdf!
+      Rails.logger.error 'Fix pdf subroutine failed'
+      return false
+    end
     unless process_mobile_pages!
       Rails.logger.error 'Process plain text subroutine failed'
       return false
@@ -69,6 +74,23 @@ class DocumentProcessorMobile
   end
 
 private
+
+  # private: Download pdf in location
+  #
+  # Examples
+  #   => processor.download!
+  #     true
+  #
+  # Returns true when finished downloading
+  def fix_pdf!
+    %x( gs -o #{file_path_opt} -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress #{file_path} )
+    unless $?.exitstatus == 0
+      Rails.logger.error "Failed at fix pdf. Command: gs -o #{file_path_opt} -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress #{file_path}"
+    end
+    
+    File.delete( file_path )
+    @file_path = file_path_opt
+  end
 
   # private: Process document in location for plain text
   #

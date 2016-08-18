@@ -13,7 +13,6 @@ class HackerNewsWorker
           HackerNewsPost.create(:hn_id => item['id'],
                                 :title => item['title'],
                                 :url => item['url'])
-          Rails.logger.info "Creating: " + item['title']
         end
       end
     end
