@@ -91,6 +91,8 @@ private
 
     File.delete( file_path )
     @file_path = file_path_opt
+
+    return true
   end
 
   # private: Process document in location for plain text
@@ -129,7 +131,13 @@ private
 
     # threads.each { |t| t.join }
 
-    page_count             = PDF::Reader.new( './' + file_path ).page_count
+    begin
+      page_count             = PDF::Reader.new( './' + file_path ).page_count
+    rescue PDF::Reader::MalformedPDFError => e
+      Rails.logger.error e.to_s
+      return false
+    end
+
     for i in 1..page_count
       fetch_page!(i)
     end
