@@ -15,9 +15,8 @@ class BackfillAllMobilePagesWorker
 							d.foreign_document_id,
 							random_hex
 						)
-			dpm.start_routine
 
-			d.update_attribute(:backfilled, true)
+			d.update_attribute(:backfilled, dpm.start_routine)
 		end
 
   end

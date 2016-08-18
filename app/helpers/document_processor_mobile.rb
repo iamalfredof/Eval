@@ -60,7 +60,7 @@ class DocumentProcessorMobile
     #   Rails.logger.error 'Trigger callback subroutine failed'
     #   return false
     # end
-  	return html_url
+  	return true
   end
 
   # public: Gets the html_url up front. Helps with requests timing out.
@@ -129,7 +129,7 @@ private
 
     # threads.each { |t| t.join }
 
-    page_count             = PDF::Reader.new(file_path).page_count
+    page_count             = PDF::Reader.new( './' + file_path ).page_count
     for i in 1..page_count
       fetch_page!(i)
     end
@@ -140,7 +140,7 @@ private
 
   def fetch_page!(page_number)
     begin
-      Magick::Image.read( file_path + '[' + (page_number - 1).to_s + ']' )
+      Magick::Image.read( './' + file_path + '[' + (page_number - 1).to_s + ']' )
       .first
       .write( folder + '/' + base_page_path + page_number.to_s + '.png' )
       @pages_processed += 1
