@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160718172855) do
+ActiveRecord::Schema.define(version: 20160818132717) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 20160718172855) do
     t.string  "foreign_document_url"
     t.string  "html_url"
     t.string  "secret"
+    t.boolean "backfilled",           default: false
   end
 
   create_table "foros_peru_posts", force: :cascade do |t|

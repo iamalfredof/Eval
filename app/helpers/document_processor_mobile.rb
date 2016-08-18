@@ -99,8 +99,6 @@ private
           page = pages.pop rescue nil
           next unless page
 
-          Rails.logger.info( 'Processing page: ' + page.number.to_s )
-
           fetch_page!(page.number)
         end
       }
