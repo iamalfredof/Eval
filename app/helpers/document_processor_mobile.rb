@@ -4,7 +4,7 @@ require 'fileutils'
 
 class DocumentProcessorMobile
   attr_reader :url, :root_folder, :folder, :document_id, :html_url, :base_page_path, :thread_count, :file_path_opt
-  attr_accessor :file_path
+  attr_accessor :file_path, :pages_processed
   # attr_accessor :files
 
   # Initialize the processor class
@@ -17,6 +17,7 @@ class DocumentProcessorMobile
   #
   def initialize(url, document_id, random_hex, thread_count = 5)
   	@thread_count     = thread_count
+    @pages_processed  = 0
     @url 						 	= url
     @file_path       	= URI(url).path.split('/').last
     @file_path_opt    = document_id.to_s + '_opt.pdf'
@@ -105,10 +106,10 @@ private
       Rails.logger.error "Failed at making directory."
     end
 
-    pages             = PDF::Reader.new(file_path).pages.to_ary
-    page_count        = pages.size
+    # pages             = PDF::Reader.new(file_path).pages.to_ary
+    # page_count        = pages.size
 
-    pages_processed   = 0
+    # pages_processed   = 0
     # mutex             = Mutex.new
     # threads           = []
 
@@ -128,12 +129,9 @@ private
 
     # threads.each { |t| t.join }
 
-    until pages.empty?
-      pages_processed += 1
-      page = pages.pop rescue nil
-      next unless page
-
-      fetch_page!(page.number)
+    pages             = PDF::Reader.new(file_path).page_count
+    for i in 1..pages
+      fetch_page!(i)
     end
 
     Rails.logger.info( 'Processed id-' + document_id + ' mobile pages: ' + pages_processed.to_s + '/' + page_count.to_s )
@@ -145,6 +143,7 @@ private
       Magick::Image.read( file_path + '[' + (page_number - 1).to_s + ']' )
       .first
       .write( folder + '/' + base_page_path + page_number.to_s + '.png' )
+      @pages_processed += 1
     rescue Magick::ImageMagickError => e
       Rails.logger.error e.to_s
     end
