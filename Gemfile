@@ -32,8 +32,8 @@ gem 'pushover'
 # HTML parsing
 gem 'nokogiri'
 # Image and PDF manipulation
-# gem 'rmagick'
-gem "mini_magick"
+gem 'rmagick'
+# gem "mini_magick"
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
