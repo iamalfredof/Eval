@@ -133,8 +133,8 @@ private
 
     begin
       page_count             = PDF::Reader.new( './' + file_path ).page_count
-    rescue PDF::Reader::MalformedPDFError => e
-      Rails.logger.error e.to_s
+    rescue PDF::Reader::MalformedPDFError
+      Rails.logger.error 'PDF::Reader::MalformedPDFError'
       clean_up!
       Document.where(:foreign_document_id => document_id).first.update_attribute(:failed_processing, true)
       return false
