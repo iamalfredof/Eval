@@ -133,8 +133,13 @@ private
 
     begin
       page_count             = PDF::Reader.new( './' + file_path ).page_count
-    rescue PDF::Reader::MalformedPDFError
-      Rails.logger.error 'PDF::Reader::MalformedPDFError'
+    rescue PDF::Reader::MalformedPDFError => e
+      if e
+        Rails.logger.error e.to_s
+      else
+        Rails.logger.error 'PDF::Reader::MalformedPDFError'
+      end
+
       clean_up!
       Document.where(:foreign_document_id => document_id).first.update_attribute(:failed_processing, true)
       return false
@@ -159,7 +164,11 @@ private
       .write( folder + '/' + base_page_path + page_number.to_s + '.png' )
       @pages_processed += 1
     rescue Magick::ImageMagickError => e
-      Rails.logger.error e.to_s
+      if e
+        Rails.logger.error e.to_s
+      else
+        Rails.logger.error 'Magick::ImageMagickError'
+      end
     end
   end
 
