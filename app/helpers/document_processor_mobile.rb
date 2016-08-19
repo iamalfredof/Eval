@@ -132,7 +132,7 @@ private
     # threads.each { |t| t.join }
 
     begin
-      page_count             = PDF::Reader.new( './' + file_path ).page_count
+      page_count             = PDF::Reader.new( file_path ).page_count
     rescue PDF::Reader::MalformedPDFError => e
       if e
         Rails.logger.error e.to_s
@@ -145,8 +145,13 @@ private
       return false
     end
 
-    for i in 1..page_count
-      fetch_page!(i)
+    if page_count.present?
+      for i in 1..page_count
+        fetch_page!(i)
+      end
+    else
+      Rails.logger.error 'Page count is nil'
+      return false
     end
 
     if pages_processed < page_count
@@ -159,7 +164,7 @@ private
 
   def fetch_page!(page_number)
     begin
-      Magick::Image.read( './' + file_path + '[' + (page_number - 1).to_s + ']' )
+      Magick::Image.read( file_path + '[' + (page_number - 1).to_s + ']' )
       .first
       .write( folder + '/' + base_page_path + page_number.to_s + '.png' )
       @pages_processed += 1
