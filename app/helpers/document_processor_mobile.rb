@@ -81,13 +81,13 @@ class DocumentProcessorMobile
 
 private
 
-  # private: Download pdf in location
+  # private: Fix pdf in location
   #
   # Examples
-  #   => processor.download!
+  #   => processor.fix_pdf!
   #     true
   #
-  # Returns true when finished downloading
+  # Returns true when finished
   def fix_pdf!
     %x( gs -o #{file_path_opt} -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress #{file_path} )
     unless $?.exitstatus == 0
@@ -100,10 +100,10 @@ private
     return true
   end
 
-  # private: Process document in location for plain text
+  # private: Process document in location
   #
   # Examples
-  #   => processor.process!
+  #   => processor.process_mobile_pages!
   #     true
   #
   # Returns true when finished the process
@@ -185,6 +185,10 @@ private
   #
   # Returns true when finished downloading
   def download!
+    Rails.logger.debug 'file_path:'
+    Rails.logger.debug file_path
+    Rails.logger.debug 'url'
+    Rails.logger.debug url
 		open(file_path, 'wb') do |file|
 		  file << open(url).read
 	    Rails.logger.info 'Downloaded file'
