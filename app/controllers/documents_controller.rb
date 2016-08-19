@@ -13,6 +13,7 @@ class DocumentsController < ApplicationController
 	def backfilled
 		@pending_count = Document.where(:backfilled => false, :failed_processing => false).count
 		@total_count = Document.all.count
+		@success_count = Document.where(:backfilled => true, :failed_processing => false).count
 		@failed_count = Document.where(:failed_processing => true).count
 	end
 
