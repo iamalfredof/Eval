@@ -19,7 +19,7 @@ class DocumentProcessorMobile
   	@thread_count     = thread_count
     @pages_processed  = 0
     @url 						 	= url
-    @file_path       	= URI(url).path.split('/').last
+    @file_path       	= document_id.to_s + '.pdf'
     @file_path_opt    = document_id.to_s + '_opt.pdf'
     @folder           = document_id.to_s + '-' + random_hex
     @root_folder			= 'documents_html'
@@ -185,10 +185,6 @@ private
   #
   # Returns true when finished downloading
   def download!
-    Rails.logger.debug 'file_path:'
-    Rails.logger.debug file_path
-    Rails.logger.debug 'url'
-    Rails.logger.debug url
 		open(file_path, 'wb') do |file|
 		  file << open(url).read
 	    Rails.logger.info 'Downloaded file'
