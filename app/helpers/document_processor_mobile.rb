@@ -36,22 +36,27 @@ class DocumentProcessorMobile
   #
   # Returns html_url when finished
   def start_routine
+    Rails.logger.debug 'Going into download'
   	unless download!
   		Rails.logger.error 'Download subroutine failed'
   		return false
   	end
+    Rails.logger.debug 'Going into fix_pdf'
     unless fix_pdf!
       Rails.logger.error 'Fix pdf subroutine failed'
       return false
     end
+    Rails.logger.debug 'Going into process_mobile_pages'
     unless process_mobile_pages!
       Rails.logger.error 'Process plain text subroutine failed'
       return false
     end
+    Rails.logger.debug 'Going into upload'
   	unless upload!
   		Rails.logger.error 'Upload subroutine failed'
   		return false
   	end
+    Rails.logger.debug 'Going into clean_up'
   	unless clean_up!
   		Rails.logger.error 'Clean up subroutine failed'
   		return false
@@ -145,13 +150,8 @@ private
       return false
     end
 
-    if page_count.present?
-      for i in 1..page_count
-        fetch_page!(i)
-      end
-    else
-      Rails.logger.error 'Page count is nil'
-      return false
+    for i in 1..page_count
+      fetch_page!(i)
     end
 
     if pages_processed < page_count
