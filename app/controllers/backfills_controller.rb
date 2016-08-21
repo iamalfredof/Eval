@@ -46,16 +46,41 @@ class BackfillsController < ApplicationController
 	end
 
 	def clean_data
-		# First delete nulls
 		documents = Document.all
 		@prev_num_docs = documents.count
+
+		delete_nulls( documents )
+		keep_only_highest_id( documents )
+		find_same_titles_and_keep_oldest_within_offset
+
+		@num_docs = Document.all.count
+	end
+
+private
+
+	# Find documents with same title and delete all but
+	# but the oldest one with +- 10 records
+	def find_same_titles_and_keep_oldest_within_offset
+		similars = {}
+		a = []
 		documents.each do |d|
-			if d.html_url == nil
-				d.destroy
-			end
+			title = d.foreign_document_url.split('%2').last
+			similars[title] = d.id
+			a << d.id
 		end
 
-		# Delete all but the one record with the highest id
+		b = []
+		similars.each do |s|
+			b << s[1]
+		end
+
+		c = a - b 
+
+		@delete_candidates = Document.find( c )
+	end
+
+	# Delete all but the one record with the highest id
+	def keep_only_highest_id(documents)
 		documents.each do |d|
 			fid = d.foreign_document_id
 			# Find all with same foreign id
@@ -74,12 +99,16 @@ class BackfillsController < ApplicationController
 				end
 			end
 		end
-
-		@num_docs = Document.all.count
-
 	end
 
-private
+	# First delete nulls
+	def delete_nulls(documents)
+		documents.each do |d|
+			if d.html_url == nil
+				d.destroy
+			end
+		end
+	end
 
 	def verify_security_token_get
   	unless params[:secret] == '64zNYufgM8dL1x506FY092uKbms23tT7'
