@@ -49,8 +49,8 @@ class BackfillsController < ApplicationController
 		documents = Document.all
 		@prev_num_docs = documents.count
 
-		delete_nulls( documents )
-		keep_only_highest_id( documents )
+		delete_nulls
+		keep_only_highest_id
 		find_same_titles_and_keep_oldest_within_offset
 
 		@num_docs = Document.all.count
@@ -61,8 +61,10 @@ private
 	# Find documents with same title and delete all but
 	# but the oldest one with +- 10 records
 	def find_same_titles_and_keep_oldest_within_offset
+		documents = Document.all
 		similars = {}
 		a = []
+		
 		documents.each do |d|
 			title = d.foreign_document_url.split('%2').last
 			similars[title] = d.id
@@ -80,7 +82,9 @@ private
 	end
 
 	# Delete all but the one record with the highest id
-	def keep_only_highest_id(documents)
+	def keep_only_highest_id
+		documents = Document.all
+
 		documents.each do |d|
 			fid = d.foreign_document_id
 			# Find all with same foreign id
@@ -102,7 +106,9 @@ private
 	end
 
 	# First delete nulls
-	def delete_nulls(documents)
+	def delete_nulls
+		documents = Document.all
+
 		documents.each do |d|
 			if d.html_url == nil
 				d.destroy
