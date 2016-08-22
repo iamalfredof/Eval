@@ -64,9 +64,9 @@ private
 		documents = Document.all
 		similars = {}
 		a = []
-		
+
 		documents.each do |d|
-			title = d.foreign_document_url.split('%2').last
+			title = d.foreign_document_url.split('%2F').last
 			similars[title] = d.id
 			a << d.id
 		end
