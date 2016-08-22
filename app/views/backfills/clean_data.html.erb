@@ -2,8 +2,9 @@
 <h2>Records cleaned from: <%= @prev_num_docs %> to: <%= @num_docs %></h2>
 <hr>
 <h2>Delete Candidates</h2>
-<% @delete_candidates.each do |c| %>
-	<p>id: <%= c.id %></p>
-	<p>foreign_document_id: <%= c.foreign_document_id %></p>
-	<p>foreign_document_url: <%= c.foreign_document_url %></p>
+<% @delete_candidates.each do |arr| %>
+	<p>Title: <%= arr[0].foreign_document_url.split('%2F').last %></p>
+	<% arr.each do |doc| %>
+		<p>id: <%= doc.id %> fid: <%= doc.foreign_document_id %></p>
+	<% end %>
 <% end %>

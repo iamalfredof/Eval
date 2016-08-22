@@ -63,22 +63,25 @@ private
 	def find_same_titles_and_keep_oldest_within_offset
 		documents = Document.all
 		similars = {}
-		a = []
 
 		documents.each do |d|
 			title = d.foreign_document_url.split('%2F').last
-			similars[title] = d.id
-			a << d.id
+			
+			if similars.has_key?( title )
+				similars[title] = [ similars[title],d ].flatten
+			else
+				similars[title] = d
+			end
+
 		end
 
-		b = []
-		similars.each do |s|
-			b << s[1]
+		@delete_candidates = []
+		similars.each do |tuple|
+			if tuple[1].class == Array
+				@delete_candidates << tuple[1]
+			end
 		end
 
-		c = a - b 
-
-		@delete_candidates = Document.find( c )
 	end
 
 	# Delete all but the one record with the highest id
