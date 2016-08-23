@@ -29,6 +29,8 @@ gem 'aws-sdk', '~> 2'
 gem 'httparty'
 # Push Notifications for my phone
 gem 'pushover'
+# Push Notifications for the client
+gem 'pusher'
 # HTML parsing
 gem 'nokogiri'
 # Image and PDF manipulation

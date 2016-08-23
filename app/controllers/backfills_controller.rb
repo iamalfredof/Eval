@@ -50,50 +50,12 @@ class BackfillsController < ApplicationController
 
 		delete_nulls
 		keep_only_highest_id
-		detect_similar_titles
+		CleanMissingDocumentsWorker.process_async
 
 		@num_docs = Document.all.count
 	end
 
 private
-
-	# Find documents with same title and delete all but
-	# but the oldest one with +- 10 records
-	def detect_similar_titles
-		documents = Document.all
-		similars = {}
-
-		documents.each do |d|
-			title = d.foreign_document_url.split('%2F').last
-			
-			if similars.has_key?( title )
-				similars[title] = [ similars[title],d ].flatten
-			else
-				similars[title] = d
-			end
-
-		end
-
-		@delete_candidates = []
-		similars.each do |tuple|
-			if tuple[1].class == Array
-				@delete_candidates << tuple[1]
-			end
-		end
-
-		@delete_candidates.each do |arr|
-			arr.each do |doc|
-				status_code = JSON.parse(
-												HTTParty.get('https://www.udocz.com/api/v1/get_document/' + 
-													doc.foreign_document_id.to_s + '.json')
-												.body)['status']
-				if status_code == 404
-					Document.find(doc.id).destroy
-				end
-			end
-		end
-
-	end
 
 	# Delete all but the one record with the highest id
 	def keep_only_highest_id

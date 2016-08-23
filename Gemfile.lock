@@ -97,6 +97,7 @@ GEM
     httparty (0.13.7)
       json (~> 1.8)
       multi_xml (>= 0.5.2)
+    httpclient (2.8.0)
     i18n (0.7.0)
     jbuilder (2.5.0)
       activesupport (>= 3.0.0, < 5.1)
@@ -134,6 +135,11 @@ GEM
       ttfunk
     pg (0.18.4)
     pkg-config (1.1.7)
+    pusher (0.16.0)
+      httpclient (~> 2.7)
+      multi_json (~> 1.0)
+      pusher-signature (~> 0.1.8)
+    pusher-signature (0.1.8)
     pushover (0.99.2)
       bini (~> 0.6.0)
       yajl-ruby
@@ -242,6 +248,7 @@ DEPENDENCIES
   nokogiri
   pdf-reader
   pg
+  pusher
   pushover
   rails (= 4.2.5.1)
   rmagick

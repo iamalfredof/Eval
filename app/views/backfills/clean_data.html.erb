@@ -1,2 +1,15 @@
 <h1>Cleaning data. Check records manually now to ensure integrity.</h1>
 <h2>Records cleaned from: <%= @prev_num_docs %> to: <%= @num_docs %></h2>
+<hr>
+<h1>Additional records are being cross checked.</h1>
+<h2>Additional deletes: <span id='deleted'></span></h2>
+
+<script type="text/javascript">
+	var pusher = new Pusher('d433e26b16810b708c60', {
+    encrypted: true
+  });
+  var channel = pusher.subscribe('api_channel');
+  channel.bind('cross_check_done', function(data) {
+  	$('#deleted').text(data.deleted)
+  });
+</script>
