@@ -50,7 +50,7 @@ class BackfillsController < ApplicationController
 
 		delete_nulls
 		keep_only_highest_id
-		CleanMissingDocumentsWorker.process_async
+		CleanMissingDocumentsWorker.perform_async
 
 		@num_docs = Document.all.count
 	end
