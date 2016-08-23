@@ -51,7 +51,7 @@ class BackfillsController < ApplicationController
 
 		delete_nulls
 		keep_only_highest_id
-		find_same_titles_and_keep_oldest_within_offset
+		detect_similar_titles
 
 		@num_docs = Document.all.count
 	end
@@ -60,7 +60,7 @@ private
 
 	# Find documents with same title and delete all but
 	# but the oldest one with +- 10 records
-	def find_same_titles_and_keep_oldest_within_offset
+	def detect_similar_titles
 		documents = Document.all
 		similars = {}
 

@@ -5,6 +5,6 @@
 <% @delete_candidates.each do |arr| %>
 	<p>Title: <%= arr[0].foreign_document_url.split('%2F').last %></p>
 	<% arr.each do |doc| %>
-		<p>id: <%= doc.id %> fid: <%= doc.foreign_document_id %></p>
+		<p>id: <%= doc.id %> fid: <%= doc.foreign_document_id %> code: <%= JSON.parse(HTTParty.get('https://www.udocz.com/api/v1/get_document/'+doc.foreign_document_id.to_s+'.json').body)['status'] %></p>
 	<% end %>
 <% end %>
