@@ -46,8 +46,7 @@ class BackfillsController < ApplicationController
 	end
 
 	def clean_data
-		documents = Document.all
-		@prev_num_docs = documents.count
+		@prev_num_docs = Document.all.count
 
 		delete_nulls
 		keep_only_highest_id
@@ -79,6 +78,18 @@ private
 		similars.each do |tuple|
 			if tuple[1].class == Array
 				@delete_candidates << tuple[1]
+			end
+		end
+
+		@delete_candidates.each do |arr|
+			arr.each do |doc|
+				status_code = JSON.parse(
+												HTTParty.get('https://www.udocz.com/api/v1/get_document/' + 
+													doc.foreign_document_id.to_s + '.json')
+												.body)['status']
+				if status_code == 404
+					doc.destroy
+				end
 			end
 		end
 
