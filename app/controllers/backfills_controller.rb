@@ -88,7 +88,7 @@ private
 													doc.foreign_document_id.to_s + '.json')
 												.body)['status']
 				if status_code == 404
-					doc.destroy
+					Document.find(doc.id).destroy
 				end
 			end
 		end
