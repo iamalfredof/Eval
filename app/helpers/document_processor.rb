@@ -94,6 +94,10 @@ class DocumentProcessor
       Rails.logger.error 'Upload subroutine failed'
       return false
     end
+    unless trigger_callback_ocr
+      Rails.logger.error 'Trigger callback subroutine failed'
+      return false
+    end
     File.delete( file_path )
     FileUtils.rm_rf( folder )
 
@@ -351,6 +355,19 @@ private
       Rails.logger.info 'Normal PDF Callback to uDocz'
     end
 
+    return true
+  end
+
+    # private: Callsback a POST request to the udocz.com
+  #
+  # Examples
+  #   => processor.trigger_callback
+  #     true
+  #
+  # Returns true when finished uploading
+  def trigger_callback_ocr
+    response = open('https://www.udocz.com/api/v1/ocr_callback/' + document_id + '.json', {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read
+    Rails.logger.info 'OCR callback to uDocz'
     return true
   end
 
