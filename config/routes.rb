@@ -31,6 +31,16 @@ Rails.application.routes.draw do
           get :backfilled
         end
       end
+
+      resources :queues do
+        collection do
+          get 'health'
+          get 'latency'
+          get 'queue_process'
+          get 'start_queue'
+        end
+      end
+
       resources :backfills, only: [:index]
 
       get 'backfill_all_mobile_pages' => 'backfills#backfill_all_mobile_pages'
