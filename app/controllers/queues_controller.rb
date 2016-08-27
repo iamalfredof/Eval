@@ -37,6 +37,7 @@ private
 
 	def queue_process
 		out = %x{ ps aux | grep sidekiq }
+		out_msg = "OUT: #{out}"
 		
 		if out.include? 'sidekiq 4.1.2 udoczp2h'
 			"OK. #{out_msg}"
