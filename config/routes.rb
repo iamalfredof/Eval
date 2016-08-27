@@ -34,10 +34,7 @@ Rails.application.routes.draw do
 
       resources :queues do
         collection do
-          get 'health'
-          get 'latency'
-          get 'queue_process'
-          get 'start_queue'
+          get 'check_sidekiq'
         end
       end
 
