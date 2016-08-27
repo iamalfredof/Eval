@@ -12,7 +12,7 @@ class QueuesController < ApplicationController
 		 queue_health_msg = "WARNING: TOO MANY JOBS ENQUEUED. #{queue_size_msg}"
 		end
 
-		render status: queue_health_msg
+		render json: { status: queue_health_msg }.to_json
 	end
 
 	def latency
@@ -26,12 +26,20 @@ class QueuesController < ApplicationController
 		 queue_health_msg = "WARNING: QUEUE LATENCY HIGH. #{queue_latency_msg}"
 		end
 
-		render status: queue_health_msg
+		render json: { status: queue_health_msg }.to_json
 	end
 
 	def queue_process
-		log = %x{ ps aux | grep sidekiq }
-		render log: log
+		queue_size = Sidekiq::Queue.all.size
+		queue_size_msg = "QUEUE SIZE: #{queue_size}"
+		
+		if queue_size > 0
+		 queue_health_msg = "OK. #{queue_size_msg}"
+		else
+		 queue_health_msg = "WARNING: NO QUEUES DETECTED. #{queue_size_msg}"
+		end
+
+		render json: { status: queue_health_msg }.to_json
 	end
 
 	def start_queue
