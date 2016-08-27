@@ -17,7 +17,7 @@ class DocumentProcessor
   #
   def initialize(url, document_id, random_hex)
   	@url 						 	= url
-    @file_path       	= URI(url).path.split('/').last
+    @file_path       	= document_id.to_s + URI(url).path.split('.').last
     @file_path_opt	 	= document_id.to_s + '_opt.pdf'
     @file_path_txt    = document_id.to_s + '.txt'
     @folder           = document_id.to_s + '-' + random_hex
