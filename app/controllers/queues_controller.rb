@@ -17,9 +17,9 @@ private
 		queue_size_msg = "QUEUE SIZE: #{queue_size}"
 		
 		if queue_size < 50
-			queue_health_msg = "OK. #{queue_size_msg}"
+			"OK. #{queue_size_msg}"
 		else
-			queue_health_msg = "WARNING: TOO MANY JOBS ENQUEUED. #{queue_size_msg}"
+			"WARNING: TOO MANY JOBS ENQUEUED. #{queue_size_msg}"
 		end
 	end
 
@@ -29,21 +29,23 @@ private
 		queue_latency_msg = "QUEUE LATENCY: #{queue_latency}"
 		
 		if queue_latency < 30
-			queue_health_msg = "OK. #{queue_latency_msg}"
+			"OK. #{queue_latency_msg}"
 		else
-			queue_health_msg = "WARNING: QUEUE LATENCY HIGH. #{queue_latency_msg}"
+			"WARNING: QUEUE LATENCY HIGH. #{queue_latency_msg}"
 		end
 	end
 
 	def queue_process
-		queue_size = Sidekiq::Queue.all.size
-		queue_size_msg = "QUEUE SIZE: #{queue_size}"
+		out = %x{ ps aux | grep sidekiq }
 		
-		if queue_size > 0
-			queue_health_msg = "OK. #{queue_size_msg}"
+		if out.include? 'sidekiq 4.1.2 udoczp2h'
+			"OK. #{out_msg}"
 		else
 			%x{ bundle exec sidekiq -d -L sidekiq.log -q default -e production -c 20 }
-			queue_health_msg = "WARNING: NO QUEUES DETECTED. #{queue_size_msg}"
+			unless $?.exitstatus == 0
+        "WARNING: SIDEKIQ COULD NOT RESTART. #{queue_health_msg}"
+      end
+			"OK. RESTARTING SIDEKIQ."
 		end
 	end
 
