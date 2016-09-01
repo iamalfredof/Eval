@@ -229,9 +229,9 @@ private
     for i in 1..n
       if ocr
         # TODO: This will generate image versions so we need to clean them later
-        %x( pdftoppm #{file_path} -gray -r 300 -f #{i} -l #{i} -singlefile '#{folder}/#{i}_out' )
+        %x( pdftoppm #{file_path_opt} -gray -r 300 -f #{i} -l #{i} -singlefile '#{folder}/#{i}_out' )
         unless $?.exitstatus == 0
-          Rails.logger.error "Failed at pdf to ppm. Command: pdftoppm #{file_path} -gray -r 300 -f #{i} -l #{i} -singlefile '#{folder}/#{i}_out'"
+          Rails.logger.error "Failed at pdf to ppm. Command: pdftoppm #{file_path_opt} -gray -r 300 -f #{i} -l #{i} -singlefile '#{folder}/#{i}_out'"
           return false
         end
         Rails.logger.info 'Out: ' + i.to_s + '_out.pgm'
@@ -246,11 +246,7 @@ private
         file_to_delete = folder + '/' + i.to_s + '_out.pgm'
         File.delete( file_to_delete )
       else
-        if non_optimized
-          %x( pdftotext -f #{i} -l #{i} #{file_path_opt} '#{folder}/#{i}_#{file_path_txt}' )
-        else
-          %x( pdftotext -f #{i} -l #{i} #{file_path} '#{folder}/#{i}_#{file_path_txt}' )
-        end
+        %x( pdftotext -f #{i} -l #{i} #{file_path_opt} '#{folder}/#{i}_#{file_path_txt}' )
         unless $?.exitstatus == 0
           Rails.logger.error "Failed at processing plain text. Command: pdftotext #{file_path} '#{folder}/#{file_path_txt}'"
           return false
