@@ -182,9 +182,9 @@ private
       # @file_path_opt = file_path
       File.rename(file_path, file_path_opt)
     else
-      %x( gs -sDEVICE=pdfwrite -sOutputFile='#{file_path_opt}' -dNOPAUSE -dBATCH #{file_path} )
+      %x( gs -sDEVICE=pdfwrite -sOutputFile='#{file_path_opt}' -dNOPAUSE -dBATCH #{file_path_opt} )
     	unless $?.exitstatus == 0
-    		Rails.logger.error "Failed at optimizing pdf. Command: gs -sDEVICE=pdfwrite -sOutputFile='#{file_path_opt}' -dNOPAUSE -dBATCH #{file_path}"
+    		Rails.logger.error "Failed at optimizing pdf. Command: gs -sDEVICE=pdfwrite -sOutputFile='#{file_path_opt}' -dNOPAUSE -dBATCH #{file_path_opt}"
     		Rails.logger.info "Moving on with unoptimized file."
         File.rename(file_path, file_path_opt)
         @non_optimized = true
