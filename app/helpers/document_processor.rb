@@ -169,15 +169,17 @@ private
     # Cleans office file from file system
     # Makes a copy of the pdf to the upload folder
     office = OfficeProcessor.new(file_path)
-    if office.start_routine
-      file_name_arr  = file_path.split('.')
-      file_name_arr.last.replace('pdf')
-      @file_path  = file_name_arr.join('.')
+    if office.is_office?
+      if office.start_routine
+        file_name_arr  = file_path.split('.')
+        file_name_arr.last.replace('pdf')
+        @file_path  = file_name_arr.join('.')
   
-      @office_flag = true
-    else
-      Rails.logger.error "Office processor failed. document_id: #{document_id} file_path: #{file_path}"
-      return false
+        @office_flag = true
+      else
+        Rails.logger.error "Office processor failed. document_id: #{document_id} file_path: #{file_path}"
+        return false
+      end
     end
 
     # By pass the optimization feature upon special request
