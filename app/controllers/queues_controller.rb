@@ -48,15 +48,15 @@ private
 			"OK. #{out_msg}"
 		else
 
-			QUEUE_NAMES = { "default" => "5", "pdf" => "5", "office" => "1", "crawler" => "1", "ocr" => "1" }
-			ACTIVE_QUEUES = []
+			queue_names = { "default" => "5", "pdf" => "5", "office" => "1", "crawler" => "1", "ocr" => "1" }
+			active_queues = []
 
 			Sidekiq::Queue.all.each do |q|
-				ACTIVE_QUEUES << q.name
+				active_queues << q.name
 			end
 
-			QUEUE_NAMES.each do |tup|
-				unless ACTIVE_QUEUES.include? tup[0]
+			queue_names.each do |tup|
+				unless active_queues.include? tup[0]
 					q_name = tup[0]
 					q_concurrency = tup[1]
 					%x{ bundle exec sidekiq -d -L sidekiq.log -q #{q_name} -e production -c #{q_concurrency} }
