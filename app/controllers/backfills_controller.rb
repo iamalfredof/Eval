@@ -26,11 +26,11 @@ class BackfillsController < ApplicationController
 	end
 
 	def init_pq_worker
-		if params[:product].present? and params[:offset].present?
-			PeruQuioscoWorker.perform_async( params[:product], Integer( params[:offset] ) )
-		else
-			render status: :forbidden, text: "You do not have access to this page."
-		end
+		PeruQuioscoWorker.perform_async( 'elcomercio', 0 )
+		PeruQuioscoWorker.perform_async( 'correo', 1 )
+		PeruQuioscoWorker.perform_async( 'peru21', 2 )
+		PeruQuioscoWorker.perform_async( 'gestion', 3 )
+		PeruQuioscoWorker.perform_async( 'depor', 4 )
 	end
 
 	def hn_upload
