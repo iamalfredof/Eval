@@ -44,33 +44,40 @@ private
 		out = %x{ ps aux | grep sidekiq }
 		out_msg = "OUT: #{out}"
 		restart_msg = "OK. RESTARTING SIDEKIQ:"
+		restart_failed_message = "WARNING:"
+		restart_failed = false
 
 		if out.scan(/sidekiq 4.1.2 udoczp2h/).count == 5
 			"OK. #{out_msg}"
 		else
-
-			queue_names = { "default" => "5", "pdf" => "5", "office" => "1", "crawler" => "1", "ocr" => "1" }
+			
 			active_queues = []
-
 			Sidekiq::Queue.all.each do |q|
 				active_queues << q.name
 			end
 
-			queue_names.each do |tup|
-				
-				unless active_queues.include? tup[0]
-					q_name = tup[0]
-					q_concurrency = tup[1]
+			queue_names = { "default" => "5", "pdf" => "5", "office" => "1", "crawler" => "1", "ocr" => "1" }
+			queue_names.each do |q_name, q_concurrency|
+
+				if active_queues.include? q_name
+					restart_msg += " QUEUE OK: #{q_name}"
+				else
 					%x{ bundle exec sidekiq -d -L sidekiq.log -q #{q_name} -e production -c #{q_concurrency} }
 					unless $?.exitstatus == 0
-		        return "WARNING: SIDEKIQ #{q_name} COULD NOT RESTART. #{queue_health_msg}"
+		        restart_failed_message += " QUEUE #{q_name} COULD NOT RESTART."
+		        restart_failed = true
 					end
-					restart_msg += " bundle exec sidekiq -d -L sidekiq.log -q #{q_name} -e production -c #{q_concurrency}"
+					restart_msg += " QUEUE #{q_name} RESTARTED."
 				end
 
 			end
 
-			restart_msg
+			if restart_failed
+				return restart_failed_message
+			else
+				return restart_msg
+			end
+
 		end
 
 	end
