@@ -22,6 +22,13 @@ class QueuesController < ApplicationController
 		}
 	end
 
+	def exec_sidekiq
+		%x{ bundle exec sidekiq -d -L sidekiq.log -q ocr -e production -c 1 }
+		render json: {
+			command: "bundle exec sidekiq -d -L sidekiq.log -q ocr -e production -c 1"
+		}
+	end
+
 private
 	
 	def health
@@ -79,7 +86,7 @@ private
 					end
 					restart_msg += " bundle exec sidekiq -d -L sidekiq.log -q #{q_name} -e production -c #{q_concurrency}"
 				end
-				
+
 			end
 
 			restart_msg
