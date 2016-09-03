@@ -67,6 +67,7 @@ private
 		        restart_failed_message += " QUEUE #{q_name} COULD NOT RESTART: #{bundle_log}"
 		        restart_failed = true
 					end
+					Rails.logger.info "Sidekiq Bundle: #{bundle_log}"
 					restart_msg += " QUEUE #{q_name} RESTARTED."
 				end
 
