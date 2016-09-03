@@ -19,8 +19,6 @@ class OfficeProcessor
 		return false
 	end
 
-private
-
 	# If extension exists within office realm return true
 	# Currently there are more supported formats by unoconv than what uDocz supports
 	def is_office?
@@ -130,6 +128,8 @@ private
 		end
 
 	end
+
+private
 
 	def convert_to_pdf
 		%x( unoconv #{file_name} )

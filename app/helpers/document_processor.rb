@@ -175,6 +175,9 @@ private
       @file_path  = file_name_arr.join('.')
   
       @office_flag = true
+    else
+      Rails.logger.error "Office processor failed. document_id: #{document_id} file_path: #{file_path}"
+      return false
     end
 
     # By pass the optimization feature upon special request

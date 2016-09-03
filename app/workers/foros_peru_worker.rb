@@ -1,7 +1,7 @@
 class ForosPeruWorker
   include Sidekiq::Worker
   include Sidekiq::Status::Worker
-  sidekiq_options :queue => :default
+  sidekiq_options :queue => :crawler
 
   def perform(keyword)
     search_url                = "http://www.forosperu.net/buscar/99999999/?q=" + keyword + "&o=date"

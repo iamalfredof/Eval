@@ -1,11 +1,11 @@
-class PNOWorker
+class PDFWorker
   include Sidekiq::Worker
   include Sidekiq::Status::Worker
-  sidekiq_options :queue => :default
+  sidekiq_options :queue => :pdf
 
   def perform(foreign_document_url, foreign_document_id, random_hex)
     processor = DocumentProcessor.new(foreign_document_url, foreign_document_id, random_hex)
-		processor.process_non_optimized!
+    html_url = processor.start_routine
   end
   
 end

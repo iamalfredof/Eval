@@ -5,7 +5,7 @@ require 'fileutils'
 class PeruQuioscoUploaderWorker
   include Sidekiq::Worker
   include Sidekiq::Status::Worker
-  sidekiq_options :queue => :default
+  sidekiq_options :queue => :crawler
 
   def perform(pq_id)
     pq_pub                  = PeruQuioscoPub.find(pq_id)

@@ -1,7 +1,7 @@
 class PeruQuioscoWorker
   include Sidekiq::Worker
   include Sidekiq::Status::Worker
-  sidekiq_options :queue => :default
+  sidekiq_options :queue => :crawler
 
   def perform(product, offset)
     # This URL will always get the latest daily publication

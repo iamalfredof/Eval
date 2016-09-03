@@ -5,7 +5,7 @@ require 'fileutils'
 class HackerNewsUploaderWorker
   include Sidekiq::Worker
   include Sidekiq::Status::Worker
-  sidekiq_options :queue => :default
+  sidekiq_options :queue => :crawler
 
   def perform(hn_id)
     folder_path = 'HN-' + SecureRandom.hex
