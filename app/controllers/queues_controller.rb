@@ -44,13 +44,28 @@ private
 		out = %x{ ps aux | grep sidekiq }
 		out_msg = "OUT: #{out}"
 		
-		if out.include? 'sidekiq 4.1.2 udoczp2h'
+		if out.scan(/sidekiq 4.1.2 udoczp2h/).count == 5
 			"OK. #{out_msg}"
 		else
-			%x{ bundle exec sidekiq -d -L sidekiq.log -q default -e production -c 5 }
-			unless $?.exitstatus == 0
-        "WARNING: SIDEKIQ COULD NOT RESTART. #{queue_health_msg}"
-      end
+
+			QUEUE_NAMES = { "default" => "5", "pdf" => "5", "office" => "1", "crawler" => "1", "ocr" => "1" }
+			ACTIVE_QUEUES = []
+
+			Sidekiq::Queue.all.each do |q|
+				ACTIVE_QUEUES << q.name
+			end
+
+			QUEUE_NAMES.each do |tup|
+				unless ACTIVE_QUEUES.include? tup[0]
+					q_name = tup[0]
+					q_concurrency = tup[1]
+					%x{ bundle exec sidekiq -d -L sidekiq.log -q #{q_name} -e production -c #{q_concurrency} }
+					unless $?.exitstatus == 0
+		        return "WARNING: SIDEKIQ #{q_name} COULD NOT RESTART. #{queue_health_msg}"
+					end
+				end
+			end
+
 			"OK. RESTARTING SIDEKIQ."
 		end
 	end
