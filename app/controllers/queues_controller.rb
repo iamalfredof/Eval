@@ -13,10 +13,15 @@ class QueuesController < ApplicationController
 private
 	
 	def health
-		queue_size = Sidekiq::Queue.new.size
+		queue_size = Sidekiq::Queue.new("default").size + 
+								 Sidekiq::Queue.new("pdf").size + 
+								 Sidekiq::Queue.new("office").size + 
+								 Sidekiq::Queue.new("crawler").size +
+								 Sidekiq::Queue.new("ocr").size
+
 		queue_size_msg = "QUEUE SIZE: #{queue_size}"
 		
-		if queue_size < 50
+		if queue_size < 10
 			"OK. #{queue_size_msg}"
 		else
 			"WARNING: TOO MANY JOBS ENQUEUED. #{queue_size_msg}"
@@ -42,7 +47,7 @@ private
 		if out.include? 'sidekiq 4.1.2 udoczp2h'
 			"OK. #{out_msg}"
 		else
-			%x{ bundle exec sidekiq -d -L sidekiq.log -q default -e production -c 20 }
+			%x{ bundle exec sidekiq -d -L sidekiq.log -q default -e production -c 5 }
 			unless $?.exitstatus == 0
         "WARNING: SIDEKIQ COULD NOT RESTART. #{queue_health_msg}"
       end
