@@ -35,6 +35,7 @@ Rails.application.routes.draw do
       resources :queues do
         collection do
           get 'check_sidekiq'
+          get 'active_queues'
         end
       end
 

@@ -10,6 +10,18 @@ class QueuesController < ApplicationController
 			}.to_json
 	end
 
+	def active_queues
+		active_queues = []
+
+		Sidekiq::Queue.all.each do |q|
+			active_queues << q.name
+		end
+
+		render json: {
+			queues: active_queues.to_json
+		}
+	end
+
 private
 	
 	def health
@@ -57,6 +69,7 @@ private
 			end
 
 			queue_names.each do |tup|
+				
 				unless active_queues.include? tup[0]
 					q_name = tup[0]
 					q_concurrency = tup[1]
@@ -66,10 +79,12 @@ private
 					end
 					restart_msg += " bundle exec sidekiq -d -L sidekiq.log -q #{q_name} -e production -c #{q_concurrency}"
 				end
+				
 			end
 
 			restart_msg
 		end
+
 	end
 
 	def verify_security_token_get
