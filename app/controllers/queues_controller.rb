@@ -43,7 +43,8 @@ private
 	def queue_process
 		out = %x{ ps aux | grep sidekiq }
 		out_msg = "OUT: #{out}"
-		
+		restart_msg = "OK. RESTARTING SIDEKIQ:"
+
 		if out.scan(/sidekiq 4.1.2 udoczp2h/).count == 5
 			"OK. #{out_msg}"
 		else
@@ -63,10 +64,11 @@ private
 					unless $?.exitstatus == 0
 		        return "WARNING: SIDEKIQ #{q_name} COULD NOT RESTART. #{queue_health_msg}"
 					end
+					restart_msg += " bundle exec sidekiq -d -L sidekiq.log -q #{q_name} -e production -c #{q_concurrency}"
 				end
 			end
 
-			"OK. RESTARTING SIDEKIQ."
+			restart_msg
 		end
 	end
 
