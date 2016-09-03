@@ -62,9 +62,9 @@ private
 				if active_queues.include? q_name
 					restart_msg += " QUEUE OK: #{q_name}"
 				else
-					%x{ bundle exec sidekiq -d -L sidekiq.log -q #{q_name} -e production -c #{q_concurrency} }
+					bundle_log = %x{ bundle exec sidekiq -d -L sidekiq.log -q #{q_name} -e production -c #{q_concurrency} }
 					unless $?.exitstatus == 0
-		        restart_failed_message += " QUEUE #{q_name} COULD NOT RESTART."
+		        restart_failed_message += " QUEUE #{q_name} COULD NOT RESTART: #{bundle_log}"
 		        restart_failed = true
 					end
 					restart_msg += " QUEUE #{q_name} RESTARTED."
