@@ -24,7 +24,7 @@ class DocumentsController < ApplicationController
       	random_hex = SecureRandom.hex
 
       	# Process as office or as pdf
-      	if OfficeProcessor.new.is_office?( @document.foreign_document_url )
+      	if OfficeProcessor.new( @document.foreign_document_url ).is_office?
       		OfficeWorker.perform_async(@document.foreign_document_url, @document.foreign_document_id, random_hex)
       	else
       		PDFWorker.perform_async(@document.foreign_document_url, @document.foreign_document_id, random_hex)
