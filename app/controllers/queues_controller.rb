@@ -10,25 +10,6 @@ class QueuesController < ApplicationController
 			}.to_json
 	end
 
-	def active_queues
-		active_queues = []
-
-		Sidekiq::Queue.all.each do |q|
-			active_queues << q.name
-		end
-
-		render json: {
-			queues: active_queues.to_json
-		}
-	end
-
-	def exec_sidekiq
-		%x{ bundle exec sidekiq -d -L sidekiq.log -q ocr -e production -c 1 }
-		render json: {
-			command: "bundle exec sidekiq -d -L sidekiq.log -q ocr -e production -c 1"
-		}
-	end
-
 private
 	
 	def health
