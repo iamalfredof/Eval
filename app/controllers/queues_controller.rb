@@ -52,8 +52,16 @@ private
 		else
 			
 			active_queues = []
+			rows_text = ""
+			rows = Nokogiri::HTML( HTTParty.get('http://159.203.121.237/sidekiq/busy').body ).css('tr')
+			rows.each do |row|
+				rows_text += row.text
+			end
+
 			Sidekiq::Queue.all.each do |q|
-				active_queues << q.name
+				if rows_text.include? q.name
+					active_queues << q.name
+				end
 			end
 
 			queue_names = { "default" => "5", "pdf" => "5", "office" => "1", "crawler" => "1", "ocr" => "1" }
