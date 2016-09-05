@@ -6,7 +6,7 @@ class OfficeProcessor
 
 	def initialize(file_name)
 		@file_name 			= file_name
-		@extension 			= file_name.split('.').last
+		@extension 			= file_name.split('.').last.downcase
 	end
 
 	def start_routine
