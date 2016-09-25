@@ -64,7 +64,15 @@ private
 				end
 			end
 
-			queue_names = { "default" => "5", "pdf" => "5", "office" => "1", "crawler" => "1", "ocr" => "1" }
+			queue_names = { 
+				"ocr" => "1",
+				"office" => "2",
+				"crawler" => "3",
+				"default" => "4",
+				"pdf" => "5"
+			}
+			
+
 			queue_names.each do |q_name, q_concurrency|
 
 				if active_queues.include? q_name
