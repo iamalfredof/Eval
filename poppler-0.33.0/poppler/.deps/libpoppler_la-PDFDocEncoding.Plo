@@ -1,0 +1,8 @@
+libpoppler_la-PDFDocEncoding.lo: PDFDocEncoding.cc \
+ /usr/include/stdc-predef.h PDFDocEncoding.h CharTypes.h
+
+/usr/include/stdc-predef.h:
+
+PDFDocEncoding.h:
+
+CharTypes.h:

@@ -80,8 +80,6 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.10.0)
-    combine_pdf (0.2.23)
-      ruby-rc4 (>= 0.1.5)
     concurrent-ruby (1.0.2)
     connection_pool (2.2.0)
     debug_inspector (0.0.2)
@@ -240,7 +238,6 @@ DEPENDENCIES
   capistrano-rails-console
   capistrano-rvm!
   coffee-rails (~> 4.1.0)
-  combine_pdf
   dotenv-rails
   httparty
   jbuilder (~> 2.0)
@@ -261,3 +258,6 @@ DEPENDENCIES
   turbolinks
   uglifier (>= 1.3.0)
   web-console (~> 2.0)
+
+BUNDLED WITH
+   1.13.1

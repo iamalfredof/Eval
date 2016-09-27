@@ -1,6 +1,6 @@
 class DocumentsController < ApplicationController
   before_action :verify_security_token,
-  	only: [:create]
+  	only: [:create, :create_2]
 
   before_action :verify_security_token_get,
   	only: [:ocr, :pno, :process_mobile_pages]
@@ -29,16 +29,14 @@ class DocumentsController < ApplicationController
       	else
       		PDFWorker.perform_async(@document.foreign_document_url, @document.foreign_document_id, random_hex)
       	end
-
-      	dp = DocumentProcessor.new(@document.foreign_document_url, @document.foreign_document_id, random_hex)
-      	html_url = dp.get_html_url
-    		@document.update_attribute(:html_url, html_url)
+      	
       	format.json { render :show, status: :created, location: @document }
       else
         format.json { render json: @document.errors, status: :unprocessable_entity }
       end
     end
 	end
+	
 
 	def process_mobile_pages
 		ProcessMobilePagesWorker.perform_async(@document.foreign_document_url, @document.foreign_document_id, @document.html_url.split('/')[4].split('-')[1])

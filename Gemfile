@@ -58,7 +58,7 @@ gem 'sidekiq'
 gem 'sidekiq-status'
 
 gem 'pdf-reader'
-gem 'combine_pdf'
+#gem 'combine_pdf'
 
 # Add this if you're using rvm
 gem 'capistrano-rvm', github: "capistrano/rvm"

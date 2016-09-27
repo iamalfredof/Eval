@@ -3,6 +3,7 @@ require 'open-uri'
 require 'fileutils'
 
 class DocumentProcessor
+  include ApiHelper
   attr_reader :url, :file_path_opt, :file_path_txt, :root_folder, :folder, :document_id, :html_url
   attr_accessor :file_path, :office_flag, :non_optimized
   # attr_accessor :files
@@ -60,6 +61,7 @@ class DocumentProcessor
       Rails.logger.error 'Trigger callback subroutine failed'
       return false
     end
+    update_html_url
   	return html_url
   end
 
@@ -339,6 +341,13 @@ private
     Rails.logger.info 'Cleaned up'
     return true
   end
+  
+  def update_html_url
+    document = Document.find_by(:foreign_document_id => document_id)
+    if document
+      document.update_attribute(:html_url, html_url)
+    end
+  end
 
   # private: Callsback a POST request to the udocz.com
   #
@@ -349,10 +358,10 @@ private
   # Returns true when finished uploading
   def trigger_callback
     if office_flag
-      response = open('https://www.udocz.com/api/v1/office_processing_callback/' + document_id + '.json', {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read
+      response = open(udocz_url + '/api/v1/office_processing_callback/' + document_id + '.json', {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read
       Rails.logger.info 'Office callback to uDocz'
     else
-      response = open('https://www.udocz.com/api/v1/pdf_processing_callback/' + document_id + '.json', {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read
+      response = open(udocz_url + '/api/v1/pdf_processing_callback/' + document_id + '.json', {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read
       Rails.logger.info 'Normal PDF Callback to uDocz'
     end
 
@@ -367,7 +376,7 @@ private
   #
   # Returns true when finished uploading
   def trigger_callback_ocr
-    response = open('https://www.udocz.com/api/v1/ocr_callback/' + document_id + '.json', {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read
+    response = open(udocz_url + '/api/v1/ocr_callback/' + document_id + '.json', {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read
     Rails.logger.info 'OCR callback to uDocz'
     return true
   end

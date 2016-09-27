@@ -1,0 +1,6 @@
+libgoo_la-FixedPoint.lo: FixedPoint.cc /usr/include/stdc-predef.h \
+ ../config.h
+
+/usr/include/stdc-predef.h:
+
+../config.h:
