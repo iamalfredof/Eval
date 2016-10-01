@@ -48,53 +48,53 @@ private
 		restart_failed = false
 
 		if out.scan(/sidekiq 4.1.2 udoczp2h/).count == 5
-			"OK. #{out_msg}"
+				"OK. #{out_msg}"
 		else
 			
-			active_queues = []
-			rows_text = ""
-			rows = Nokogiri::HTML( HTTParty.get('http://159.203.121.237/sidekiq/busy').body ).css('tr')
-			rows.each do |row|
-				rows_text += row.text
-			end
-
-			Sidekiq::Queue.all.each do |q|
-				if rows_text.include? q.name
-					active_queues << q.name
+				active_queues = []
+				rows_text = ""
+				rows = Nokogiri::HTML( HTTParty.get('http://159.203.121.237/sidekiq/busy').body ).css('tr')
+				rows.each do |row|
+					rows_text += row.text
 				end
-			end
-
-			queue_names = { "default" => "5", "pdf" => "5", "office" => "1", "crawler" => "1", "ocr" => "1" }
-			queue_names.each do |q_name, q_concurrency|
-
-				if active_queues.include? q_name
-					restart_msg += " QUEUE OK: #{q_name}"
-				else
-					bundle_log = %x{ bundle exec sidekiq -d -L sidekiq.log -q #{q_name} -e production -c #{q_concurrency} }
-					unless $?.exitstatus == 0
-		        restart_failed_message += " QUEUE #{q_name} COULD NOT RESTART: #{bundle_log}"
-		        restart_failed = true
+	
+				Sidekiq::Queue.all.each do |q|
+					if rows_text.include? q.name
+						active_queues << q.name
 					end
-					Rails.logger.info "Sidekiq Bundle: #{bundle_log}"
-					restart_msg += " QUEUE #{q_name} RESTARTED."
+				end
+	
+				queue_names = { "default" => "5", "pdf" => "5", "office" => "1", "crawler" => "1", "ocr" => "1" }
+				queue_names.each do |q_name, q_concurrency|
+	
+					if active_queues.include? q_name
+						restart_msg += " QUEUE OK: #{q_name}"
+					else
+						bundle_log = %x{ bundle exec sidekiq -d -L sidekiq.log -q #{q_name} -e production -c #{q_concurrency} }
+						unless $?.exitstatus == 0
+			        restart_failed_message += " QUEUE #{q_name} COULD NOT RESTART: #{bundle_log}"
+			        restart_failed = true
+						end
+						Rails.logger.info "Sidekiq Bundle: #{bundle_log}"
+						restart_msg += " QUEUE #{q_name} RESTARTED."
+					end
+	
+				end
+	
+				if restart_failed
+					return restart_failed_message
+				else
+					return restart_msg
 				end
 
-			end
-
-			if restart_failed
-				return restart_failed_message
-			else
-				return restart_msg
-			end
-
-		end
+		end #end of if out.scan
 
 	end
 
 	def verify_security_token_get
-  	unless params[:secret] == '64zNYufgM8dL1x506FY092uKbms23tT7'
+		unless params[:secret] == '64zNYufgM8dL1x506FY092uKbms23tT7'
   		render status: :forbidden, text: "You do not have access to this page."
   	end
-  end
+	end
 
 end
