@@ -62,6 +62,8 @@ gem 'pdf-reader'
 
 # Add this if you're using rvm
 gem 'capistrano-rvm', github: "capistrano/rvm"
+#connect apis
+gem 'httparty'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

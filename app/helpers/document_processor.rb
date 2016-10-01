@@ -155,6 +155,13 @@ class DocumentProcessor
     end
     return html_url
   end
+  
+  def remove_on_fail
+    unless clean_up!(non_optimized)
+  		Rails.logger.error 'Clean up subroutine failed'
+  		return false
+  	end
+  end
 
 private
 
@@ -358,14 +365,10 @@ private
   # Returns true when finished uploading
   def trigger_callback
     if office_flag
-      response = open(udocz_url + '/api/v1/office_processing_callback/' + document_id + '.json', {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read
-      Rails.logger.info 'Office callback to uDocz'
+      regular_call('office_processing_callback', 'Office callback to uDocz')
     else
-      response = open(udocz_url + '/api/v1/pdf_processing_callback/' + document_id + '.json', {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read
-      Rails.logger.info 'Normal PDF Callback to uDocz'
+      regular_call('pdf_processing_callback', 'Normal PDF callback to uDocz')
     end
-
-    return true
   end
 
     # private: Callsback a POST request to the udocz.com
@@ -376,9 +379,16 @@ private
   #
   # Returns true when finished uploading
   def trigger_callback_ocr
-    response = open(udocz_url + '/api/v1/ocr_callback/' + document_id + '.json', {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read
-    Rails.logger.info 'OCR callback to uDocz'
+    regular_call('ocr_callback', 'OCR callback to uDocz')
     return true
   end
-
+  
+  def regular_call(_action, log_info)
+    _response = HTTParty.get( udocz_url + '/api/v1/' + _action + '/' + document_id + '.json', 
+              :verify => false,
+              :body   => {  :url => get_html_url }.to_json,
+              :headers => { 'Content-Type' => 'application/json' } )
+    Rails.logger.info log_info
+    return true
+  end
 end
