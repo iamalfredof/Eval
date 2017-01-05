@@ -4,7 +4,13 @@ class QueuesController < ApplicationController
 
 	def check_sidekiq
 		render json: {
-			queue_size: health,
+			queue_size: {
+				ocr: health('ocr'),
+				office: health('office'),
+				crawler: health('crawler'),
+				default: health('default'),
+				pdf: health('pdf')
+			},
 			latency: latency,
 			process: queue_process
 			}.to_json
@@ -12,12 +18,8 @@ class QueuesController < ApplicationController
 
 private
 	
-	def health
-		queue_size = Sidekiq::Queue.new("default").size + 
-								 Sidekiq::Queue.new("pdf").size + 
-								 Sidekiq::Queue.new("office").size + 
-								 Sidekiq::Queue.new("crawler").size +
-								 Sidekiq::Queue.new("ocr").size
+	def health(queue_name)
+		queue_size = Sidekiq::Queue.new(queue_name).size
 
 		queue_size_msg = "QUEUE SIZE: #{queue_size}"
 		
