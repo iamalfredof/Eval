@@ -23,10 +23,8 @@ class DocumentsController < ApplicationController
       if @document.save
       	random_hex = SecureRandom.hex
 
-      	ds = Documentservice.new(@document.foreign_document_url, @document.foreign_document_id, 
+      	AsyncPdfWorker.perform_async(@document.foreign_document_url, @document.foreign_document_id, 
       	random_hex, params[:bucket], params[:callback_url])
-      	html_url = ds.get_html_url
-    		@document.update_attribute(:html_url, html_url)
       	format.json { render :show, status: :created, location: @document }
       else
         format.json { render json: @document.errors, status: :unprocessable_entity }
