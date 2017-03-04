@@ -1,6 +1,7 @@
 class DocumentsController < ApplicationController
   before_action :verify_security_token,
   	only: [:create]
+  before_action :security_token, only: [:async_process]
 
   before_action :verify_security_token_get,
   	only: [:ocr, :pno, :process_mobile_pages]
@@ -17,18 +18,27 @@ class DocumentsController < ApplicationController
 		@failed_count = Document.where(:failed_processing => true).count
 	end
 
+	def async_process
+		respond_to do |format|
+      if @document.save
+      	random_hex = SecureRandom.hex
+
+      	ds = Documentservice.new(@document.foreign_document_url, @document.foreign_document_id, 
+      	random_hex, params[:bucket], params[:callback_url])
+      	html_url = ds.get_html_url
+    		@document.update_attribute(:html_url, html_url)
+      	format.json { render :show, status: :created, location: @document }
+      else
+        format.json { render json: @document.errors, status: :unprocessable_entity }
+      end
+    end
+	end
+
 	# POST /documents.json
 	def create
 		respond_to do |format|
       if @document.save
       	random_hex = SecureRandom.hex
-
-      	# Process as office or as pdf
-      	if OfficeProcessor.new( @document.foreign_document_url ).is_office?
-      		OfficeWorker.perform_async(@document.foreign_document_url, @document.foreign_document_id, random_hex)
-      	else
-      		PDFWorker.perform_async(@document.foreign_document_url, @document.foreign_document_id, random_hex)
-      	end
 
       	dp = DocumentProcessor.new(@document.foreign_document_url, @document.foreign_document_id, random_hex)
       	html_url = dp.get_html_url
@@ -75,6 +85,14 @@ private
 							:foreign_document_id, :foreign_document_url, :secret
   					 )
 	end
+
+	def security_token
+		@document = Document.new(document_params)
+
+  	unless @document.secret == Constants.TOKEN
+  		render status: :forbidden, text: "You do not have access to this page."
+  	end
+  end
 
 	def verify_security_token
 		@document = Document.create(document_params)
