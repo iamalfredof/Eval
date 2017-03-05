@@ -38,6 +38,8 @@ Rails.application.routes.draw do
         end
       end
 
+      post '/documents/async_process' => 'documents#async_process'
+
       resources :backfills, only: [:index]
 
       get 'backfill_all_mobile_pages' => 'backfills#backfill_all_mobile_pages'
