@@ -23,7 +23,7 @@ class DocumentsController < ApplicationController
       if @document.save
       	random_hex = SecureRandom.hex
 
-      	AsyncPdfWorker.perform_async(@document.foreign_document_url, @document.foreign_document_id, 
+      	AsyncPDFWorker.perform_async(@document.foreign_document_url, @document.foreign_document_id, 
       	random_hex, params[:bucket], params[:callback_url])
       	format.json { render :show, status: :created, location: @document }
       else
