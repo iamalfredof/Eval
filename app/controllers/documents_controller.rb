@@ -37,6 +37,12 @@ class DocumentsController < ApplicationController
 		respond_to do |format|
       if @document.save
       	random_hex = SecureRandom.hex
+				# Process as office or as pdf
+      	if OfficeProcessor.new( @document.foreign_document_url ).is_office?
+      		OfficeWorker.perform_async(@document.foreign_document_url, @document.foreign_document_id, random_hex)
+      	else
+      		PDFWorker.perform_async(@document.foreign_document_url, @document.foreign_document_id, random_hex)
+      	end
 
       	dp = DocumentProcessor.new(@document.foreign_document_url, @document.foreign_document_id, random_hex)
       	html_url = dp.get_html_url
