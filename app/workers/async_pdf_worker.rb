@@ -22,7 +22,7 @@ class AsyncPDFWorker
   def respond(callback_url, _status, doc_id, url, message = '')
   	require 'httparty'
     HTTParty::Basement.default_options.update(verify: false)
-    update_document(doc_id, url, status != 202)
+    update_document(doc_id, url, _status != 202)
 
   	response = 
         HTTParty.post( callback_url,
