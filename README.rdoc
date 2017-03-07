@@ -26,3 +26,9 @@ Things you may want to cover:
 
 Please feel free to use a different markup language if you do not plan to run
 <tt>rake doc:app</tt>.
+
+bundle exec sidekiq -d -L sidekiq.log -q ocr -e production -c 1
+bundle exec sidekiq -d -L sidekiq.log -q office -e production -c 2
+bundle exec sidekiq -d -L sidekiq.log -q crawler -e production -c 3
+bundle exec sidekiq -d -L sidekiq.log -q default -e production -c 4
+bundle exec sidekiq -d -L sidekiq.log -q pdf -e production -c 5
