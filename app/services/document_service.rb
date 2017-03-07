@@ -3,7 +3,7 @@ require 'open-uri'
 require 'fileutils'
 
 class DocumentService
-  attr_reader :url, :file_path_opt, :file_path_txt, :root_folder, :folder, :document_id, :html_url
+  attr_reader :url, :file_path_opt, :file_path_txt, :root_folder, :folder, :document_id, :html_url, :bucket
   attr_accessor :file_path, :non_optimized
   # attr_accessor :files
 
@@ -23,7 +23,8 @@ class DocumentService
     @folder           = document_id.to_s + '-' + random_hex
     @root_folder			= 'documents_html'
     @document_id 			= document_id.to_s
-    @html_url					= "http://#{bucket}.s3-website-#{ENV['AWS_REGION']}.amazonaws.com/#{@root_folder}/#{@folder}/#{@document_id}_opt.html"
+    @bucket           = bucket
+    @html_url					= "http://#{@bucket}.s3-website-#{ENV['AWS_REGION']}.amazonaws.com/#{@root_folder}/#{@folder}/#{@document_id}_opt.html"
     @non_optimized    = false
   end
 
@@ -178,9 +179,11 @@ private
 
 
   def upload!
-  	uploader = S3FolderUpload.new(folder)
+  	uploader = S3FolderUpload.new(folder, bucket)
   	uploader.upload!(50, root_folder + '/')
   	Rails.logger.info 'Uploaded file'
+    Rails.logger.info 'root_folder: ' + root_folder
+    Rails.logger.info 'folder: ' + folder
   	return true
   end
 

@@ -10,6 +10,7 @@ class AsyncPDFWorker
     	result = service.start_routine
     	result ? respond(callback_url, 202, foreign_document_id, result, "success") :
     					 respond(callback_url, 422, foreign_document_id, nil, "something is wrong")
+      Rails.logger.info result
   	rescue Exception => e
     	Rails.logger.error e.message
     	respond(callback_url, 422, foreign_document_id, nil, e.message)
@@ -22,7 +23,7 @@ class AsyncPDFWorker
   	require 'httparty'
     HTTParty::Basement.default_options.update(verify: false)
     update_document(doc_id, url, status != 202)
-    
+
   	response = 
         HTTParty.post( callback_url,
           :body => {
