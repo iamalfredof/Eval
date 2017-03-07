@@ -57,7 +57,11 @@ class DocumentService
   		return false
   	end
 
-  	return html_url
+  	return true
+  end
+
+  def get_html_url
+    return html_url
   end
 
 private
@@ -182,8 +186,6 @@ private
   	uploader = S3FolderUpload.new(folder, bucket)
   	uploader.upload!(50, root_folder + '/')
   	Rails.logger.info 'Uploaded file'
-    Rails.logger.info 'root_folder: ' + root_folder
-    Rails.logger.info 'folder: ' + folder
   	return true
   end
 
